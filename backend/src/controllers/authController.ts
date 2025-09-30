@@ -65,15 +65,12 @@ export const register = asyncHandler(async (req: Request, res: Response): Promis
   refreshTokens[user.id] = refreshToken;
 
   sendSuccessResponse(res, {
-    message: 'User registered successfully',
-    data: {
-      user,
-      tokens: {
-        accessToken,
-        refreshToken,
-      },
+    user,
+    tokens: {
+      accessToken,
+      refreshToken,
     },
-  }, 201);
+  }, 'User registered successfully', 201);
 });
 
 export const login = asyncHandler(async (req: Request, res: Response): Promise<void> => {

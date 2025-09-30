@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload as JwtLibPayload, SignOptions, VerifyOptions } from 'jsonwebtoken';
 import { createLogger } from '../config/logger';
 
 const logger = createLogger();
@@ -25,11 +25,13 @@ export interface TokenPair {
  */
 export const generateAccessToken = (payload: JwtPayload): string => {
   try {
-    return jwt.sign(payload, JWT_SECRET, {
-      expiresIn: JWT_EXPIRES_IN,
+    const options: SignOptions = {
+      expiresIn: JWT_EXPIRES_IN as string,
       issuer: 'recipehub-api',
       audience: 'recipehub-client',
-    });
+    };
+    
+    return jwt.sign(payload, JWT_SECRET, options);
   } catch (error) {
     logger.error('Error generating access token:', error);
     throw new Error('Failed to generate access token');
@@ -41,11 +43,13 @@ export const generateAccessToken = (payload: JwtPayload): string => {
  */
 export const generateRefreshToken = (payload: JwtPayload): string => {
   try {
-    return jwt.sign(payload, JWT_REFRESH_SECRET, {
-      expiresIn: JWT_REFRESH_EXPIRES_IN,
+    const options: SignOptions = {
+      expiresIn: JWT_REFRESH_EXPIRES_IN as string,
       issuer: 'recipehub-api',
       audience: 'recipehub-client',
-    });
+    };
+    
+    return jwt.sign(payload, JWT_REFRESH_SECRET, options);
   } catch (error) {
     logger.error('Error generating refresh token:', error);
     throw new Error('Failed to generate refresh token');

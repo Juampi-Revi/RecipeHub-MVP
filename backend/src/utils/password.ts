@@ -3,7 +3,6 @@ import { createLogger } from '../config/logger';
 
 const logger = createLogger();
 
-// Password configuration
 const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || '12');
 
 /**
@@ -79,7 +78,6 @@ export const validatePasswordStrength = (password: string): { isValid: boolean; 
     errors.push('Password must contain at least one special character');
   }
 
-  // Check for common weak passwords
   const commonPasswords = [
     'password', '123456', '123456789', 'qwerty', 'abc123',
     'password123', 'admin', 'letmein', 'welcome', 'monkey'
@@ -89,7 +87,6 @@ export const validatePasswordStrength = (password: string): { isValid: boolean; 
     errors.push('Password is too common and easily guessable');
   }
 
-  // Check for repeated characters
   if (/(.)\1{2,}/.test(password)) {
     errors.push('Password cannot contain more than 2 consecutive identical characters');
   }
@@ -113,18 +110,15 @@ export const generateRandomPassword = (length: number = 16): string => {
   
   let password = '';
   
-  // Ensure at least one character from each category
   password += lowercase[Math.floor(Math.random() * lowercase.length)];
   password += uppercase[Math.floor(Math.random() * uppercase.length)];
   password += numbers[Math.floor(Math.random() * numbers.length)];
   password += symbols[Math.floor(Math.random() * symbols.length)];
   
-  // Fill the rest randomly
   for (let i = 4; i < length; i++) {
     password += allChars[Math.floor(Math.random() * allChars.length)];
   }
   
-  // Shuffle the password
   return password.split('').sort(() => Math.random() - 0.5).join('');
 };
 
@@ -133,14 +127,11 @@ export const generateRandomPassword = (length: number = 16): string => {
  */
 export const needsRehash = (hashedPassword: string): boolean => {
   try {
-    // Extract the cost factor from the hash
     const costFactor = parseInt(hashedPassword.split('$')[2]);
     
-    // If the current cost factor is lower than our target, rehash is needed
     return costFactor < SALT_ROUNDS;
   } catch (error) {
     logger.error('Error checking if password needs rehash:', error);
-    // If we can't determine, assume it needs rehashing for safety
     return true;
   }
 };

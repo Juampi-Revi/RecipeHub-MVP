@@ -1,19 +1,10 @@
 import { z } from 'zod';
 
 // Common validation patterns
-const emailSchema = z.string().email('Invalid email format');
-const passwordSchema = z.string()
-  .min(8, 'Password must be at least 8 characters long')
-  .max(128, 'Password must be less than 128 characters long')
-  .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
-  .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
-  .regex(/\d/, 'Password must contain at least one number')
-  .regex(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, 'Password must contain at least one special character');
-
-const nameSchema = z.string()
-  .min(2, 'Name must be at least 2 characters long')
-  .max(50, 'Name must be less than 50 characters long')
-  .regex(/^[a-zA-Z\s]+$/, 'Name can only contain letters and spaces');
+export const emailSchema = z.string().email('Invalid email format');
+export const passwordSchema = z.string().min(8, 'Password must be at least 8 characters long');
+export const nameSchema = z.string().min(2, 'Name must be at least 2 characters long').max(50, 'Name must be less than 50 characters');
+export const roleSchema = z.enum(['USER', 'CHEF', 'ADMIN']);
 
 const idSchema = z.string().cuid('Invalid ID format');
 
@@ -51,6 +42,8 @@ export const resetPasswordSchema = z.object({
 // User validation schemas
 export const updateUserSchema = z.object({
   name: nameSchema.optional(),
+  email: emailSchema.optional(),
+  role: roleSchema.optional(),
   bio: z.string().max(500, 'Bio must be less than 500 characters').optional(),
   avatar: z.string().url('Invalid avatar URL').optional(),
 });
@@ -177,18 +170,18 @@ export const updateRatingSchema = createRatingSchema.omit({ recipeId: true });
 
 // Query parameter validation schemas
 export const paginationSchema = z.object({
-  page: z.string().regex(/^\d+$/, 'Page must be a number').transform(Number).refine(n => n > 0, 'Page must be positive').optional().default('1'),
-  limit: z.string().regex(/^\d+$/, 'Limit must be a number').transform(Number).refine(n => n > 0 && n <= 100, 'Limit must be between 1 and 100').optional().default('10'),
+  page: z.string().transform(val => parseInt(val, 10)).refine(val => val > 0, 'Page must be greater than 0').optional(),
+  limit: z.string().transform(val => parseInt(val, 10)).refine(val => val > 0 && val <= 100, 'Limit must be between 1 and 100').optional(),
+  sortBy: z.string().optional(),
+  sortOrder: z.enum(['asc', 'desc']).optional(),
 });
 
 export const searchSchema = z.object({
-  q: z.string().min(1, 'Search query is required').max(100, 'Search query must be less than 100 characters'),
-  category: z.string().optional(),
+  q: z.string().min(1, 'Search query is required'),
+  category: z.string().uuid('Invalid category ID').optional(),
   difficulty: z.enum(['EASY', 'MEDIUM', 'HARD']).optional(),
-  maxPrepTime: z.string().regex(/^\d+$/, 'Max prep time must be a number').transform(Number).optional(),
-  maxCookTime: z.string().regex(/^\d+$/, 'Max cook time must be a number').transform(Number).optional(),
-  maxCalories: z.string().regex(/^\d+$/, 'Max calories must be a number').transform(Number).optional(),
-}).merge(paginationSchema);
+  maxPrepTime: z.string().transform(val => parseInt(val, 10)).refine(val => val > 0, 'Max prep time must be positive').optional(),
+});
 
 // Type exports for TypeScript
 export type RegisterInput = z.infer<typeof registerSchema>;

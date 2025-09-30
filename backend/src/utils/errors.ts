@@ -1,151 +1,148 @@
 import { Response } from 'express';
 import { ZodError } from 'zod';
+import { Prisma } from '@prisma/client';
 import { createLogger } from '../config/logger';
 
 const logger = createLogger();
 
-// Custom error classes
-export class AppError extends Error {
-  public readonly statusCode: number;
-  public readonly isOperational: boolean;
-  public readonly code?: string;
+export class ValidationError extends Error {
+  public statusCode: number;
+  public errors: any[];
 
-  constructor(message: string, statusCode: number = 500, isOperational: boolean = true, code?: string) {
+  constructor(message: string, errors: any[] = []) {
     super(message);
-    this.statusCode = statusCode;
-    this.isOperational = isOperational;
-    this.code = code;
-
-    Error.captureStackTrace(this, this.constructor);
+    this.name = 'ValidationError';
+    this.statusCode = 400;
+    this.errors = errors;
   }
 }
 
-export class ValidationError extends AppError {
-  constructor(message: string = 'Validation failed') {
-    super(message, 400, true, 'VALIDATION_ERROR');
-  }
-}
+export class AuthenticationError extends Error {
+  public statusCode: number;
 
-export class AuthenticationError extends AppError {
   constructor(message: string = 'Authentication failed') {
-    super(message, 401, true, 'AUTHENTICATION_ERROR');
+    super(message);
+    this.name = 'AuthenticationError';
+    this.statusCode = 401;
   }
 }
 
-export class AuthorizationError extends AppError {
+export class AuthorizationError extends Error {
+  public statusCode: number;
+
   constructor(message: string = 'Access denied') {
-    super(message, 403, true, 'AUTHORIZATION_ERROR');
+    super(message);
+    this.name = 'AuthorizationError';
+    this.statusCode = 403;
   }
 }
 
-export class NotFoundError extends AppError {
+export class NotFoundError extends Error {
+  public statusCode: number;
+
   constructor(message: string = 'Resource not found') {
-    super(message, 404, true, 'NOT_FOUND_ERROR');
+    super(message);
+    this.name = 'NotFoundError';
+    this.statusCode = 404;
   }
 }
 
-export class ConflictError extends AppError {
+export class ConflictError extends Error {
+  public statusCode: number;
+
   constructor(message: string = 'Resource conflict') {
-    super(message, 409, true, 'CONFLICT_ERROR');
+    super(message);
+    this.name = 'ConflictError';
+    this.statusCode = 409;
   }
 }
 
-export class RateLimitError extends AppError {
+export class InternalServerError extends Error {
+  public statusCode: number;
+
+  constructor(message: string = 'Internal server error') {
+    super(message);
+    this.name = 'InternalServerError';
+    this.statusCode = 500;
+  }
+}
+
+export class RateLimitError extends Error {
+  public statusCode: number;
+
   constructor(message: string = 'Too many requests') {
-    super(message, 429, true, 'RATE_LIMIT_ERROR');
+    super(message);
+    this.name = 'RateLimitError';
+    this.statusCode = 429;
   }
 }
 
-export class DatabaseError extends AppError {
-  constructor(message: string = 'Database operation failed') {
-    super(message, 500, true, 'DATABASE_ERROR');
-  }
-}
-
-export class ExternalServiceError extends AppError {
-  constructor(message: string = 'External service unavailable') {
-    super(message, 503, true, 'EXTERNAL_SERVICE_ERROR');
-  }
-}
-
-// Error response interface
 export interface ErrorResponse {
   success: false;
   error: {
     message: string;
     code?: string;
     details?: any;
-    stack?: string;
   };
+  timestamp: string;
 }
 
-// Success response interface
 export interface SuccessResponse<T = any> {
   success: true;
   data: T;
-  meta?: {
-    pagination?: {
-      page: number;
-      limit: number;
-      total: number;
-      totalPages: number;
-    };
-    timestamp?: string;
-  };
+  message?: string;
+  timestamp: string;
 }
 
-/**
- * Send error response
- */
-export const sendErrorResponse = (res: Response, error: AppError | Error): void => {
-  const statusCode = error instanceof AppError ? error.statusCode : 500;
-  const code = error instanceof AppError ? error.code : 'INTERNAL_SERVER_ERROR';
-  const message = error.message || 'Internal server error';
-
+export const sendErrorResponse = (
+  res: Response,
+  error: Error,
+  statusCode?: number
+): void => {
+  const code = statusCode || (error as any).statusCode || 500;
+  
   const errorResponse: ErrorResponse = {
     success: false,
     error: {
-      message,
-      code,
-      ...(process.env.NODE_ENV === 'development' && { stack: error.stack }),
+      message: error.message,
+      code: error.name,
+      details: (error as any).errors || undefined,
     },
+    timestamp: new Date().toISOString(),
   };
 
-  // Log error
-  logger.error('Error response sent:', {
-    statusCode,
-    code,
-    message,
-    stack: error.stack,
-  });
+  if (code >= 500) {
+    logger.error('Server error:', {
+      error: error.message,
+      stack: error.stack,
+      statusCode: code,
+    });
+  } else {
+    logger.warn('Client error:', {
+      error: error.message,
+      statusCode: code,
+    });
+  }
 
-  res.status(statusCode).json(errorResponse);
+  res.status(code).json(errorResponse);
 };
 
-/**
- * Send success response
- */
 export const sendSuccessResponse = <T>(
   res: Response,
   data: T,
-  statusCode: number = 200,
-  meta?: SuccessResponse<T>['meta']
+  message?: string,
+  statusCode: number = 200
 ): void => {
-  const response: SuccessResponse<T> = {
+  const successResponse: SuccessResponse<T> = {
     success: true,
     data,
-    meta: {
-      timestamp: new Date().toISOString(),
-      ...meta,
-    },
+    message,
+    timestamp: new Date().toISOString(),
   };
 
-  res.status(statusCode).json(response);
+  res.status(statusCode).json(successResponse);
 };
 
-/**
- * Handle Zod validation errors
- */
 export const handleZodError = (error: ZodError): ValidationError => {
   const errors = error.errors.map(err => ({
     field: err.path.join('.'),
@@ -153,89 +150,31 @@ export const handleZodError = (error: ZodError): ValidationError => {
     code: err.code,
   }));
 
-  const message = `Validation failed: ${errors.map(e => `${e.field}: ${e.message}`).join(', ')}`;
-  
-  const validationError = new ValidationError(message);
-  (validationError as any).details = errors;
-  
-  return validationError;
+  return new ValidationError('Validation failed', errors);
 };
 
-/**
- * Handle Prisma errors
- */
-export const handlePrismaError = (error: any): AppError => {
-  // Prisma error codes
+export const handlePrismaError = (error: Prisma.PrismaClientKnownRequestError): Error => {
   switch (error.code) {
     case 'P2002':
-      // Unique constraint violation
-      const field = error.meta?.target?.[0] || 'field';
-      return new ConflictError(`${field} already exists`);
-    
+      return new ConflictError('A record with this data already exists');
     case 'P2025':
-      // Record not found
       return new NotFoundError('Record not found');
-    
     case 'P2003':
-      // Foreign key constraint violation
-      return new ValidationError('Invalid reference to related record');
-    
-    case 'P2014':
-      // Required relation violation
-      return new ValidationError('Required relation is missing');
-    
-    case 'P2021':
-      // Table does not exist
-      return new DatabaseError('Database table does not exist');
-    
-    case 'P2022':
-      // Column does not exist
-      return new DatabaseError('Database column does not exist');
-    
+      return new ValidationError('Foreign key constraint failed');
+    case 'P2004':
+      return new ValidationError('A constraint failed on the database');
+    case 'P1001':
+      return new InternalServerError('Database server is not reachable');
+    case 'P1002':
+      return new InternalServerError('Database server timeout');
     default:
       logger.error('Unhandled Prisma error:', error);
-      return new DatabaseError('Database operation failed');
+      return new InternalServerError('Database operation failed');
   }
 };
 
-/**
- * Async error handler wrapper
- */
 export const asyncHandler = (fn: Function) => {
   return (req: any, res: any, next: any) => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };
-};
-
-/**
- * Create pagination metadata
- */
-export const createPaginationMeta = (
-  page: number,
-  limit: number,
-  total: number
-) => {
-  const totalPages = Math.ceil(total / limit);
-  
-  return {
-    pagination: {
-      page,
-      limit,
-      total,
-      totalPages,
-      hasNext: page < totalPages,
-      hasPrev: page > 1,
-    },
-  };
-};
-
-/**
- * Validate environment variables
- */
-export const validateEnvVars = (requiredVars: string[]): void => {
-  const missingVars = requiredVars.filter(varName => !process.env[varName]);
-  
-  if (missingVars.length > 0) {
-    throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
-  }
 };

@@ -6,27 +6,23 @@ import dotenv from 'dotenv';
 import { createLogger } from './config/logger';
 import { errorHandler } from './middleware/errorHandler';
 import { notFoundHandler } from './middleware/notFoundHandler';
-import { healthRouter } from './routes/health';
+import routes from './routes';
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
 const logger = createLogger();
 const PORT = process.env.PORT || 3001;
 
-// Security middleware
 app.use(helmet());
 
-// CORS configuration
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true,
 }));
 
-// Rate limiting
 const limiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 minutes
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'),
   max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
   message: 'Too many requests from this IP, please try again later.',
   standardHeaders: true,
@@ -34,11 +30,9 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Request logging middleware
 app.use((req, res, next) => {
   logger.info(`${req.method} ${req.path}`, {
     ip: req.ip,
@@ -47,23 +41,18 @@ app.use((req, res, next) => {
   next();
 });
 
-// Routes
-app.use('/api/health', healthRouter);
+app.use('/api', routes);
 
-// 404 handler
 app.use(notFoundHandler);
 
-// Global error handler
 app.use(errorHandler);
 
-// Start server
 const server = app.listen(PORT, () => {
   logger.info(`🚀 RecipeHub API server running on port ${PORT}`);
   logger.info(`📊 Environment: ${process.env.NODE_ENV}`);
   logger.info(`🔗 Health check: http://localhost:${PORT}/api/health`);
 });
 
-// Graceful shutdown
 process.on('SIGTERM', () => {
   logger.info('SIGTERM received, shutting down gracefully');
   server.close(() => {

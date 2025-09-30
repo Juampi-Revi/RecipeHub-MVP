@@ -1,9 +1,8 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload as JwtLibPayload, SignOptions, VerifyOptions } from 'jsonwebtoken';
 import { createLogger } from '../config/logger';
 
 const logger = createLogger();
 
-// JWT Configuration
 const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'your-super-secret-refresh-key';
@@ -25,11 +24,13 @@ export interface TokenPair {
  */
 export const generateAccessToken = (payload: JwtPayload): string => {
   try {
-    return jwt.sign(payload, JWT_SECRET, {
-      expiresIn: JWT_EXPIRES_IN,
+    const options: SignOptions = {
+      expiresIn: JWT_EXPIRES_IN as string,
       issuer: 'recipehub-api',
       audience: 'recipehub-client',
-    });
+    };
+    
+    return jwt.sign(payload, JWT_SECRET, options);
   } catch (error) {
     logger.error('Error generating access token:', error);
     throw new Error('Failed to generate access token');
@@ -41,11 +42,13 @@ export const generateAccessToken = (payload: JwtPayload): string => {
  */
 export const generateRefreshToken = (payload: JwtPayload): string => {
   try {
-    return jwt.sign(payload, JWT_REFRESH_SECRET, {
-      expiresIn: JWT_REFRESH_EXPIRES_IN,
+    const options: SignOptions = {
+      expiresIn: JWT_REFRESH_EXPIRES_IN as string,
       issuer: 'recipehub-api',
       audience: 'recipehub-client',
-    });
+    };
+    
+    return jwt.sign(payload, JWT_REFRESH_SECRET, options);
   } catch (error) {
     logger.error('Error generating refresh token:', error);
     throw new Error('Failed to generate refresh token');
@@ -115,7 +118,6 @@ export const refreshAccessToken = (refreshToken: string): string => {
   try {
     const decoded = verifyRefreshToken(refreshToken);
     
-    // Generate new access token with same payload
     const newPayload: JwtPayload = {
       userId: decoded.userId,
       email: decoded.email,
@@ -125,7 +127,7 @@ export const refreshAccessToken = (refreshToken: string): string => {
     return generateAccessToken(newPayload);
   } catch (error) {
     logger.error('Error refreshing access token:', error);
-    throw error; // Re-throw the specific error from verifyRefreshToken
+    throw error;
   }
 };
 

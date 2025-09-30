@@ -1,0 +1,167 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close"
+  },
+  "navigation": {
+    "home": "Home",
+    "recipes": "Recipes",
+    "addRecipe": "Add Recipe",
+    "profile": "Profile",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "register": "Register"
+  },
+  "home": {
+    "title": "Welcome to RecipeHub",
+    "subtitle": "Discover, Share, and Create Amazing Recipes",
+    "description": "Join our community of food lovers and explore thousands of delicious recipes from around the world.",
+    "getStarted": "Get Started",
+    "exploreRecipes": "Explore Recipes",
+    "heroTitle": "Discover Amazing Recipes",
+    "heroSubtitle": "That Inspire",
+    "heroDescription": "Connect with chefs from around the world and discover unique flavors.",
+    "stats": {
+      "recipes": "Recipes",
+      "chefs": "Chefs",
+      "rating": "Rating"
+    },
+    "badges": {
+      "newRecipe": "New Recipe",
+      "activeCommunity": "Active Community"
+    },
+    "cta": {
+      "readyToCook": "Ready to Start Cooking?",
+      "joinCommunity": "Join thousands of home cooks sharing their favorite recipes",
+      "getStartedToday": "Get Started Today"
+    },
+    "features": {
+      "discover": {
+        "title": "Discover Recipes",
+        "description": "Browse through thousands of recipes from cuisines around the world"
+      },
+      "share": {
+        "title": "Share Your Creations",
+        "description": "Upload your own recipes and share them with the community"
+      },
+      "organize": {
+        "title": "Organize Favorites",
+        "description": "Save and organize your favorite recipes in personalized collections"
+      }
+    }
+  },
+  "recipes": {
+    "title": "Recipes",
+    "searchPlaceholder": "Search recipes...",
+    "noResults": "No recipes found",
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
+    "cookingTime": "Cooking Time",
+    "servings": "Servings",
+    "ingredients": "Ingredients",
+    "instructions": "Instructions",
+    "rating": "Rating",
+    "reviews": "Reviews"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Sign In",
+      "subtitle": "Welcome back! Please sign in to your account.",
+      "email": "Email",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "signInButton": "Sign In",
+      "noAccount": "Don't have an account?",
+      "signUpLink": "Sign up here"
+    },
+    "signUp": {
+      "title": "Create Account",
+      "subtitle": "Join RecipeHub and start your culinary journey!",
+      "fullName": "Full Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "createAccount": "Create Account",
+      "hasAccount": "Already have an account?",
+      "signInLink": "Sign in here"
+    }
+  },
+  "profile": {
+    "title": "My Profile",
+    "personalInfo": "Personal Information",
+    "myRecipes": "My Recipes",
+    "favorites": "Favorites",
+    "settings": "Settings"
+  },
+  "footer": {
+    "quickLinks": "Quick Links",
+    "account": "Account",
+    "followUs": "Follow Us",
+    "allRightsReserved": "All rights reserved.",
+    "browseRecipes": "Browse Recipes",
+    "addRecipe": "Add Recipe",
+    "signUp": "Sign Up",
+    "myProfile": "My Profile"
+  },
+  "pages": {
+    "recipes": {
+      "title": "Discover Amazing Recipes",
+      "subtitle": "Browse our collection of delicious recipes from the community"
+    },
+    "createRecipe": {
+      "title": "Create New Recipe"
+    },
+    "profile": {
+      "title": "My Profile",
+      "subtitle": "User profile management will be implemented here"
+    }
+  },
+  "features": {
+    "whyChoose": "Why Choose RecipeHub?",
+    "everythingYouNeed": "Everything you need to discover, create, and share amazing recipes",
+    "expertRecipes": {
+      "title": "Expert Recipes",
+      "description": "Curated collection of recipes from passionate home cooks and professional chefs"
+    },
+    "quickCooking": {
+      "title": "Quick & Easy",
+      "description": "Find recipes that fit your schedule with detailed prep and cook times"
+    },
+    "community": {
+      "title": "Community Driven",
+      "description": "Join thousands of home cooks sharing their favorite recipes"
+    },
+    "ratedReviewed": {
+      "title": "Rated & Reviewed",
+      "description": "Honest reviews and ratings help you find the perfect recipe every time"
+    }
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode"
+  },
+  "language": {
+    "english": "English",
+    "spanish": "Español"
+  }
+}

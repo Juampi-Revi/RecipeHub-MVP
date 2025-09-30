@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RecipeHub - Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#fef7ee',
+                            100: '#fdedd6',
+                            200: '#fad7ac',
+                            300: '#f6ba77',
+                            400: '#f19340',
+                            500: '#ed7420',
+                            600: '#de5a16',
+                            700: '#b84315',
+                            800: '#923619',
+                            900: '#762e17',
+                            950: '#40160a',
+                        },
+                        secondary: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                            950: '#052e16',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Poppins', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="font-sans bg-gray-50 dark:bg-gray-900 transition-colors">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="chef-hat" class="w-8 h-8 text-primary-600"></i>
+                    <span class="text-xl font-display font-bold text-gray-900 dark:text-white">RecipeHub</span>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 font-medium" data-translate="home">Home</a>
+                    <a href="#" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 font-medium" data-translate="recipes">Recipes</a>
+                </nav>
+                <div class="flex items-center space-x-4">
+                    <!-- Language Switch -->
+                    <button
+                        id="languageToggle"
+                        class="relative inline-flex h-8 w-16 items-center rounded-full bg-gray-200 dark:bg-gray-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 hover:bg-gray-300 dark:hover:bg-gray-600 overflow-hidden"
+                        role="switch"
+                        aria-checked="false"
+                        aria-label="Toggle language"
+                    >
+                        <!-- EN text - always at left -->
+                        <span class="absolute left-2 text-xs font-medium text-gray-600 dark:text-gray-400 z-0">
+                            EN
+                        </span>
+                        
+                        <!-- ES text - always at right -->
+                        <span class="absolute right-2 text-xs font-medium text-gray-600 dark:text-gray-400 z-0">
+                            ES
+                        </span>
+                        
+                        <!-- Sliding indicator that covers/reveals text -->
+                        <span
+                            id="languageToggleIndicator"
+                            class="absolute inline-block h-6 w-8 transform rounded-full bg-primary-600 transition-transform translate-x-1 shadow-sm z-10 flex items-center justify-center"
+                        >
+                            <span id="activeLanguageText" class="text-xs font-medium text-white">
+                                EN
+                            </span>
+                        </span>
+                    </button>
+                    
+                    <!-- Theme Toggle -->
+                    <button id="themeToggle" class="relative p-2 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
+                        <div class="relative w-5 h-5">
+                            <i data-lucide="sun" class="absolute inset-0 w-5 h-5 text-amber-500 transition-all duration-300 dark:opacity-0 dark:rotate-90 dark:scale-0"></i>
+                            <i data-lucide="moon" class="absolute inset-0 w-5 h-5 text-blue-400 transition-all duration-300 opacity-0 -rotate-90 scale-0 dark:opacity-100 dark:rotate-0 dark:scale-100"></i>
+                        </div>
+                    </button>
+                    
+                    <button class="hidden sm:flex items-center space-x-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span data-translate="addRecipe">Add Recipe</span>
+                    </button>
+                    <button class="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-primary-600">
+                        <i data-lucide="user" class="w-5 h-5"></i>
+                        <span class="hidden sm:inline" data-translate="signIn">Sign In</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-gray-800 dark:to-gray-700 py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-6xl font-display font-bold text-gray-900 dark:text-white mb-6">
+                    <span data-translate="heroTitle">Share Your Culinary</span>
+                    <span class="text-primary-600"> <span data-translate="heroTitleHighlight">Masterpieces</span></span>
+                </h1>
+                <p class="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto" data-translate="heroDescription">
+                    Join our community of passionate cooks. Discover amazing recipes, 
+                    share your own creations, and connect with fellow food enthusiasts.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button class="bg-primary-600 text-white px-8 py-3 rounded-lg hover:bg-primary-700 text-lg font-medium" data-translate="exploreRecipes">
+                        Explore Recipes
+                    </button>
+                    <button class="border-2 border-primary-600 text-primary-600 dark:text-primary-400 dark:border-primary-400 px-8 py-3 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 text-lg font-medium" data-translate="joinCommunity">
+                        Join Community
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Test Section -->
+    <section class="py-20 bg-white dark:bg-gray-900 transition-colors">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-display font-bold text-gray-900 dark:text-white mb-4">
+                    Backend API Test
+                </h2>
+                <p class="text-lg text-gray-600 dark:text-gray-300">
+                    Test the connection to our backend API
+                </p>
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 transition-colors">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Health Check</h3>
+                    <button id="testApi" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors">
+                        Test API
+                    </button>
+                </div>
+                <div id="apiResult" class="bg-white dark:bg-gray-700 rounded border dark:border-gray-600 p-4 font-mono text-sm text-gray-900 dark:text-gray-100 transition-colors">
+                    Click "Test API" to check backend connection...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 bg-gray-50 dark:bg-gray-800 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-display font-bold text-gray-900 dark:text-white mb-4">
+                    Why Choose RecipeHub?
+                </h2>
+                <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                    Everything you need to discover, create, and share amazing recipes
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="bg-primary-100 dark:bg-primary-900/30 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors">
+                        <i data-lucide="chef-hat" class="w-8 h-8 text-primary-600 dark:text-primary-400"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Expert Recipes</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Curated collection of recipes from passionate home cooks and professional chefs</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-secondary-100 dark:bg-secondary-900/30 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors">
+                        <i data-lucide="clock" class="w-8 h-8 text-secondary-600 dark:text-secondary-400"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Quick & Easy</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Find recipes that fit your schedule with detailed prep and cook times</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-primary-100 dark:bg-primary-900/30 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors">
+                        <i data-lucide="users" class="w-8 h-8 text-primary-600 dark:text-primary-400"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Community Driven</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Connect with fellow food lovers and share your culinary adventures</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-secondary-100 dark:bg-secondary-900/30 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors">
+                        <i data-lucide="star" class="w-8 h-8 text-secondary-600 dark:text-secondary-400"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Rated & Reviewed</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Honest reviews and ratings help you find the perfect recipe every time</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 dark:bg-gray-950 text-white transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="col-span-1">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i data-lucide="chef-hat" class="w-8 h-8 text-primary-400"></i>
+                        <span class="text-xl font-display font-bold">RecipeHub</span>
+                    </div>
+                    <p class="text-gray-400 dark:text-gray-300 text-sm">
+                        Share your culinary masterpieces with the world. Join our community of passionate cooks.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-gray-400 dark:text-gray-300 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#" class="text-gray-400 dark:text-gray-300 hover:text-white transition-colors">Browse Recipes</a></li>
+                        <li><a href="#" class="text-gray-400 dark:text-gray-300 hover:text-white transition-colors">Add Recipe</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-4">Account</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-gray-400 dark:text-gray-300 hover:text-white transition-colors">Sign In</a></li>
+                        <li><a href="#" class="text-gray-400 dark:text-gray-300 hover:text-white transition-colors">Sign Up</a></li>
+                        <li><a href="#" class="text-gray-400 dark:text-gray-300 hover:text-white transition-colors">My Profile</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-4">Follow Us</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 dark:text-gray-300 hover:text-white transition-colors">
+                            <i data-lucide="github" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 dark:text-gray-300 hover:text-white transition-colors">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 dark:text-gray-300 hover:text-white transition-colors">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 dark:border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-400 dark:text-gray-300 text-sm">© 2024 RecipeHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Translations
+        const translations = {
+            en: {
+                home: 'Home',
+                recipes: 'Recipes',
+                addRecipe: 'Add Recipe',
+                signIn: 'Sign In',
+                heroTitle: 'Share Your Culinary',
+                heroTitleHighlight: 'Masterpieces',
+                heroDescription: 'Join our community of passionate cooks. Discover amazing recipes, share your own creations, and connect with fellow food enthusiasts.',
+                exploreRecipes: 'Explore Recipes',
+                joinCommunity: 'Join Community'
+            },
+            es: {
+                home: 'Inicio',
+                recipes: 'Recetas',
+                addRecipe: 'Agregar Receta',
+                signIn: 'Iniciar Sesión',
+                heroTitle: 'Comparte tus Obras Maestras',
+                heroTitleHighlight: 'Culinarias',
+                heroDescription: 'Únete a nuestra comunidad de cocineros apasionados. Descubre recetas increíbles, comparte tus propias creaciones y conecta con otros entusiastas de la comida.',
+                exploreRecipes: 'Explorar Recetas',
+                joinCommunity: 'Unirse a la Comunidad'
+            }
+        };
+
+        // Theme management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            if (isDark) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Language management
+        let currentLanguage = 'en';
+
+        function updateLanguage(lang) {
+            const elements = document.querySelectorAll('[data-translate]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+            
+            // Update toggle state
+            const toggle = document.getElementById('languageToggle');
+            const indicator = document.getElementById('languageToggleIndicator');
+            const activeLanguageText = document.getElementById('activeLanguageText');
+            
+            if (lang === 'es') {
+                toggle.setAttribute('aria-checked', 'true');
+                indicator.classList.remove('translate-x-1');
+                indicator.classList.add('translate-x-7');
+                activeLanguageText.textContent = 'ES';
+            } else {
+                toggle.setAttribute('aria-checked', 'false');
+                indicator.classList.remove('translate-x-7');
+                indicator.classList.add('translate-x-1');
+                activeLanguageText.textContent = 'EN';
+            }
+            
+            currentLanguage = lang;
+            localStorage.setItem('language', lang);
+        }
+
+        function toggleLanguage() {
+            const newLang = currentLanguage === 'en' ? 'es' : 'en';
+            updateLanguage(newLang);
+        }
+
+        function initLanguage() {
+            const savedLang = localStorage.getItem('language') || 'en';
+            updateLanguage(savedLang);
+        }
+
+        // Event listeners
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        document.getElementById('languageToggle').addEventListener('click', toggleLanguage);
+
+        // Initialize
+        initTheme();
+        initLanguage();
+
+        // API Test functionality
+        document.getElementById('testApi').addEventListener('click', async function() {
+            const resultDiv = document.getElementById('apiResult');
+            resultDiv.textContent = 'Testing API connection...';
+            
+            try {
+                const response = await fetch('http://localhost:3001/api/health');
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <div class="text-green-600 font-semibold mb-2">✅ API Connection Successful!</div>
+                    <pre class="text-gray-700 dark:text-gray-300">${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="text-red-600 font-semibold mb-2">❌ API Connection Failed</div>
+                    <div class="text-gray-700 dark:text-gray-300">Error: ${error.message}</div>
+                    <div class="text-sm text-gray-500 mt-2">Make sure the backend server is running on http://localhost:3001</div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

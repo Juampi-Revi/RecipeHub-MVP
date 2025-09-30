@@ -1,0 +1,95 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="plateGradient" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f8f9fa;stop-opacity:1" />
+    </radialGradient>
+    <radialGradient id="pastaGradient" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffb347;stop-opacity:1" />
+    </radialGradient>
+    <radialGradient id="tomatoGradient" cx="30%" cy="30%" r="50%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e74c3c;stop-opacity:1" />
+    </radialGradient>
+    <linearGradient id="basilGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2ecc71;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#27ae60;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="300" fill="#f8f9fa"/>
+  
+  <!-- Table surface -->
+  <ellipse cx="200" cy="280" rx="180" ry="15" fill="#e9ecef" opacity="0.3"/>
+  
+  <!-- Plate -->
+  <ellipse cx="200" cy="180" rx="120" ry="25" fill="url(#plateGradient)" stroke="#dee2e6" stroke-width="2"/>
+  <ellipse cx="200" cy="175" rx="115" ry="23" fill="url(#plateGradient)"/>
+  
+  <!-- Pasta (spaghetti) -->
+  <g transform="translate(200,175)">
+    <!-- Multiple pasta strands -->
+    <path d="M-60,-10 Q-30,5 0,0 Q30,-5 60,10" stroke="url(#pastaGradient)" stroke-width="3" fill="none"/>
+    <path d="M-50,-5 Q-20,10 10,5 Q40,0 70,15" stroke="url(#pastaGradient)" stroke-width="3" fill="none"/>
+    <path d="M-70,0 Q-40,-10 -10,-5 Q20,0 50,-10" stroke="url(#pastaGradient)" stroke-width="3" fill="none"/>
+    <path d="M-55,5 Q-25,-5 5,0 Q35,5 65,-5" stroke="url(#pastaGradient)" stroke-width="3" fill="none"/>
+    <path d="M-65,-5 Q-35,0 -5,-10 Q25,-5 55,0" stroke="url(#pastaGradient)" stroke-width="3" fill="none"/>
+    <path d="M-45,10 Q-15,-10 15,-5 Q45,10 75,5" stroke="url(#pastaGradient)" stroke-width="3" fill="none"/>
+    
+    <!-- More pasta layers -->
+    <ellipse cx="0" cy="0" rx="50" ry="8" fill="url(#pastaGradient)" opacity="0.8"/>
+    <ellipse cx="0" cy="-3" rx="45" ry="6" fill="url(#pastaGradient)" opacity="0.9"/>
+  </g>
+  
+  <!-- Cherry tomatoes -->
+  <circle cx="160" cy="160" r="8" fill="url(#tomatoGradient)"/>
+  <circle cx="240" cy="165" r="7" fill="url(#tomatoGradient)"/>
+  <circle cx="180" cy="190" r="6" fill="url(#tomatoGradient)"/>
+  
+  <!-- Basil leaves -->
+  <g transform="translate(220,150)">
+    <path d="M0,0 Q5,-5 10,0 Q5,10 0,8 Q-5,10 -10,0 Q-5,-5 0,0" fill="url(#basilGradient)"/>
+  </g>
+  <g transform="translate(170,170) rotate(45)">
+    <path d="M0,0 Q3,-3 6,0 Q3,6 0,5 Q-3,6 -6,0 Q-3,-3 0,0" fill="url(#basilGradient)"/>
+  </g>
+  
+  <!-- Parmesan cheese -->
+  <g opacity="0.8">
+    <rect x="190" y="165" width="4" height="2" fill="#fff8dc" transform="rotate(15)"/>
+    <rect x="210" y="170" width="3" height="2" fill="#fff8dc" transform="rotate(-20)"/>
+    <rect x="185" y="180" width="5" height="1" fill="#fff8dc" transform="rotate(30)"/>
+  </g>
+  
+  <!-- Steam effect -->
+  <g opacity="0.4">
+    <path d="M180,140 Q185,130 180,120 Q175,110 180,100" stroke="#ffffff" stroke-width="2" fill="none">
+      <animate attributeName="opacity" values="0.4;0.8;0.4" dur="2s" repeatCount="indefinite"/>
+    </path>
+    <path d="M200,135 Q205,125 200,115 Q195,105 200,95" stroke="#ffffff" stroke-width="2" fill="none">
+      <animate attributeName="opacity" values="0.8;0.4;0.8" dur="2.5s" repeatCount="indefinite"/>
+    </path>
+    <path d="M220,140 Q225,130 220,120 Q215,110 220,100" stroke="#ffffff" stroke-width="2" fill="none">
+      <animate attributeName="opacity" values="0.4;0.8;0.4" dur="1.8s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- Fork -->
+  <g transform="translate(280,200) rotate(-30)">
+    <rect x="0" y="0" width="2" height="40" fill="#c0c0c0"/>
+    <rect x="-2" y="0" width="1" height="8" fill="#c0c0c0"/>
+    <rect x="0" y="0" width="1" height="8" fill="#c0c0c0"/>
+    <rect x="2" y="0" width="1" height="8" fill="#c0c0c0"/>
+    <rect x="4" y="0" width="1" height="8" fill="#c0c0c0"/>
+  </g>
+  
+  <!-- Decorative herbs around -->
+  <g transform="translate(120,120)" opacity="0.6">
+    <path d="M0,0 Q2,-2 4,0 Q2,4 0,3 Q-2,4 -4,0 Q-2,-2 0,0" fill="url(#basilGradient)"/>
+  </g>
+  <g transform="translate(300,140) rotate(30)" opacity="0.6">
+    <path d="M0,0 Q2,-2 4,0 Q2,4 0,3 Q-2,4 -4,0 Q-2,-2 0,0" fill="url(#basilGradient)"/>
+  </g>
+</svg>

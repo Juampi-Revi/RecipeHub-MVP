@@ -1,0 +1,167 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "clear": "Limpiar",
+    "submit": "Enviar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "close": "Cerrar"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "recipes": "Recetas",
+    "addRecipe": "Agregar Receta",
+    "profile": "Perfil",
+    "signIn": "Iniciar Sesión",
+    "signOut": "Cerrar Sesión",
+    "register": "Registrarse"
+  },
+  "home": {
+    "title": "Bienvenido a RecipeHub",
+    "subtitle": "Descubre, Comparte y Crea Recetas Increíbles",
+    "description": "Únete a nuestra comunidad de amantes de la comida y explora miles de deliciosas recetas de todo el mundo.",
+    "getStarted": "Comenzar",
+    "exploreRecipes": "Explorar Recetas",
+    "heroTitle": "Descubre Recetas Increíbles",
+    "heroSubtitle": "Que Inspiran",
+    "heroDescription": "Conecta con chefs de todo el mundo y descubre sabores únicos.",
+    "stats": {
+      "recipes": "Recetas",
+      "chefs": "Chefs",
+      "rating": "Calificación"
+    },
+    "badges": {
+      "newRecipe": "Nueva Receta",
+      "activeCommunity": "Comunidad Activa"
+    },
+    "cta": {
+      "readyToCook": "¿Listo para Empezar a Cocinar?",
+      "joinCommunity": "Únete a miles de cocineros caseros compartiendo sus recetas favoritas",
+      "getStartedToday": "Comienza Hoy"
+    },
+    "features": {
+      "discover": {
+        "title": "Descubre Recetas",
+        "description": "Navega a través de miles de recetas de cocinas de todo el mundo"
+      },
+      "share": {
+        "title": "Comparte tus Creaciones",
+        "description": "Sube tus propias recetas y compártelas con la comunidad"
+      },
+      "organize": {
+        "title": "Organiza Favoritos",
+        "description": "Guarda y organiza tus recetas favoritas en colecciones personalizadas"
+      }
+    }
+  },
+  "recipes": {
+    "title": "Recetas",
+    "searchPlaceholder": "Buscar recetas...",
+    "noResults": "No se encontraron recetas",
+    "difficulty": {
+      "easy": "Fácil",
+      "medium": "Medio",
+      "hard": "Difícil"
+    },
+    "cookingTime": "Tiempo de Cocción",
+    "servings": "Porciones",
+    "ingredients": "Ingredientes",
+    "instructions": "Instrucciones",
+    "rating": "Calificación",
+    "reviews": "Reseñas"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Iniciar Sesión",
+      "subtitle": "¡Bienvenido de vuelta! Por favor inicia sesión en tu cuenta.",
+      "email": "Correo Electrónico",
+      "password": "Contraseña",
+      "rememberMe": "Recordarme",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "signInButton": "Iniciar Sesión",
+      "noAccount": "¿No tienes una cuenta?",
+      "signUpLink": "Regístrate aquí"
+    },
+    "signUp": {
+      "title": "Crear Cuenta",
+      "subtitle": "¡Únete a RecipeHub y comienza tu viaje culinario!",
+      "fullName": "Nombre Completo",
+      "email": "Correo Electrónico",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "createAccount": "Crear Cuenta",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "signInLink": "Inicia sesión aquí"
+    }
+  },
+  "profile": {
+    "title": "Mi Perfil",
+    "personalInfo": "Información Personal",
+    "myRecipes": "Mis Recetas",
+    "favorites": "Favoritos",
+    "settings": "Configuración"
+  },
+  "footer": {
+    "quickLinks": "Enlaces Rápidos",
+    "account": "Cuenta",
+    "followUs": "Síguenos",
+    "allRightsReserved": "Todos los derechos reservados.",
+    "browseRecipes": "Explorar Recetas",
+    "addRecipe": "Agregar Receta",
+    "signUp": "Registrarse",
+    "myProfile": "Mi Perfil"
+  },
+  "pages": {
+    "recipes": {
+      "title": "Descubre Recetas Increíbles",
+      "subtitle": "Explora nuestra colección de deliciosas recetas de la comunidad"
+    },
+    "createRecipe": {
+      "title": "Crear Nueva Receta"
+    },
+    "profile": {
+      "title": "Mi Perfil",
+      "subtitle": "La gestión del perfil de usuario se implementará aquí"
+    }
+  },
+  "features": {
+    "whyChoose": "¿Por qué elegir RecipeHub?",
+    "everythingYouNeed": "Todo lo que necesitas para descubrir, crear y compartir recetas increíbles",
+    "expertRecipes": {
+      "title": "Recetas de Expertos",
+      "description": "Colección curada de recetas de cocineros caseros apasionados y chefs profesionales"
+    },
+    "quickCooking": {
+      "title": "Rápido y Fácil",
+      "description": "Encuentra recetas que se adapten a tu horario con tiempos detallados de preparación y cocción"
+    },
+    "community": {
+      "title": "Impulsado por la Comunidad",
+      "description": "Únete a miles de cocineros caseros compartiendo sus recetas favoritas"
+    },
+    "ratedReviewed": {
+      "title": "Calificado y Reseñado",
+      "description": "Reseñas honestas y calificaciones te ayudan a encontrar la receta perfecta cada vez"
+    }
+  },
+  "theme": {
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema",
+    "switchToLight": "Cambiar a modo claro",
+    "switchToDark": "Cambiar a modo oscuro"
+  },
+  "language": {
+    "english": "English",
+    "spanish": "Español"
+  }
+}

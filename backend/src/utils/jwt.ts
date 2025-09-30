@@ -3,7 +3,6 @@ import { createLogger } from '../config/logger';
 
 const logger = createLogger();
 
-// JWT Configuration
 const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'your-super-secret-refresh-key';
@@ -119,7 +118,6 @@ export const refreshAccessToken = (refreshToken: string): string => {
   try {
     const decoded = verifyRefreshToken(refreshToken);
     
-    // Generate new access token with same payload
     const newPayload: JwtPayload = {
       userId: decoded.userId,
       email: decoded.email,
@@ -129,7 +127,7 @@ export const refreshAccessToken = (refreshToken: string): string => {
     return generateAccessToken(newPayload);
   } catch (error) {
     logger.error('Error refreshing access token:', error);
-    throw error; // Re-throw the specific error from verifyRefreshToken
+    throw error;
   }
 };
 

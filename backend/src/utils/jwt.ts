@@ -19,13 +19,10 @@ export interface TokenPair {
   refreshToken: string;
 }
 
-/**
- * Generate access token
- */
 export const generateAccessToken = (payload: JwtPayload): string => {
   try {
     const options: SignOptions = {
-      expiresIn: JWT_EXPIRES_IN as string,
+      expiresIn: JWT_EXPIRES_IN as any,
       issuer: 'recipehub-api',
       audience: 'recipehub-client',
     };
@@ -37,13 +34,10 @@ export const generateAccessToken = (payload: JwtPayload): string => {
   }
 };
 
-/**
- * Generate refresh token
- */
 export const generateRefreshToken = (payload: JwtPayload): string => {
   try {
     const options: SignOptions = {
-      expiresIn: JWT_REFRESH_EXPIRES_IN as string,
+      expiresIn: JWT_REFRESH_EXPIRES_IN as any,
       issuer: 'recipehub-api',
       audience: 'recipehub-client',
     };

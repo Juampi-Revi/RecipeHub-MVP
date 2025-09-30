@@ -177,10 +177,34 @@ export const paginationSchema = z.object({
 });
 
 export const searchSchema = z.object({
-  q: z.string().min(1, 'Search query is required'),
-  category: z.string().uuid('Invalid category ID').optional(),
+  q: z.string().min(1, 'Search query is required').optional(),
+  category: z.string().cuid('Invalid category ID').optional(),
   difficulty: z.enum(['EASY', 'MEDIUM', 'HARD']).optional(),
   maxPrepTime: z.string().transform(val => parseInt(val, 10)).refine(val => val > 0, 'Max prep time must be positive').optional(),
+  maxCookTime: z.string().transform(val => parseInt(val, 10)).refine(val => val > 0, 'Max cook time must be positive').optional(),
+  maxCalories: z.string().transform(val => parseInt(val, 10)).refine(val => val > 0, 'Max calories must be positive').optional(),
+  minRating: z.string().transform(val => parseFloat(val)).refine(val => val >= 1 && val <= 5, 'Rating must be between 1 and 5').optional(),
+  authorId: z.string().cuid('Invalid author ID').optional(),
+  isPublished: z.string().transform(val => val === 'true').optional(),
+});
+
+export const recipeFiltersSchema = z.object({
+  search: z.string().min(1, 'Search term must not be empty').optional(),
+  categoryIds: z.array(z.string().cuid('Invalid category ID')).optional(),
+  difficulty: z.enum(['EASY', 'MEDIUM', 'HARD']).optional(),
+  maxPrepTime: z.number().int().positive('Max prep time must be positive').optional(),
+  maxCookTime: z.number().int().positive('Max cook time must be positive').optional(),
+  maxTotalTime: z.number().int().positive('Max total time must be positive').optional(),
+  maxCalories: z.number().int().positive('Max calories must be positive').optional(),
+  minRating: z.number().min(1, 'Min rating must be at least 1').max(5, 'Min rating cannot exceed 5').optional(),
+  authorId: z.string().cuid('Invalid author ID').optional(),
+  isPublished: z.boolean().optional(),
+  hasIngredients: z.array(z.string().cuid('Invalid ingredient ID')).optional(),
+});
+
+export const recipeSortSchema = z.object({
+  sortBy: z.enum(['createdAt', 'updatedAt', 'title', 'prepTime', 'cookTime', 'totalTime', 'difficulty', 'rating', 'likes']).default('createdAt'),
+  sortOrder: z.enum(['asc', 'desc']).default('desc'),
 });
 
 // Type exports for TypeScript
@@ -203,3 +227,5 @@ export type CreateRatingInput = z.infer<typeof createRatingSchema>;
 export type UpdateRatingInput = z.infer<typeof updateRatingSchema>;
 export type PaginationInput = z.infer<typeof paginationSchema>;
 export type SearchInput = z.infer<typeof searchSchema>;
+export type RecipeFiltersInput = z.infer<typeof recipeFiltersSchema>;
+export type RecipeSortInput = z.infer<typeof recipeSortSchema>;

@@ -37,6 +37,13 @@ export interface RecipeWithDetails extends Recipe {
       unit: string;
     };
   }>;
+  steps: Array<{
+    id: string;
+    stepNumber: number;
+    instruction: string;
+    imageUrl?: string;
+    duration?: number;
+  }>;
   chefs: Array<{
     id: string;
     chef: {
@@ -117,6 +124,18 @@ class RecipeService {
         },
         orderBy: {
           createdAt: 'asc' as const,
+        },
+      },
+      steps: {
+        select: {
+          id: true,
+          stepNumber: true,
+          instruction: true,
+          imageUrl: true,
+          duration: true,
+        },
+        orderBy: {
+          stepNumber: 'asc' as const,
         },
       },
       chefs: {
@@ -202,6 +221,23 @@ class RecipeService {
           ingredientId: { in: filters.hasIngredients },
         },
       };
+    }
+
+    // New categorization filters
+    if (filters.complexity) {
+      where.complexity = filters.complexity;
+    }
+
+    if (filters.flavorType) {
+      where.flavorType = filters.flavorType;
+    }
+
+    if (filters.mealType) {
+      where.mealType = filters.mealType;
+    }
+
+    if (filters.isLowCalorie !== undefined) {
+      where.isLowCalorie = filters.isLowCalorie;
     }
 
     return where;

@@ -52,6 +52,13 @@ model Recipe {
   imageUrl          String?
   isPublished       Boolean  @default(false)
   estimatedCalories Int?
+  
+  // New categorization fields
+  complexity        String   @default("MEDIUM")  // EASY, MEDIUM, HARD
+  flavorType        String   @default("SAVORY")  // SWEET, SAVORY
+  mealType          String   @default("LUNCH")   // BREAKFAST, LUNCH, SNACK, DINNER
+  isLowCalorie      Boolean  @default(false)
+  
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
@@ -64,8 +71,25 @@ model Recipe {
   likes       RecipeLike[]
   comments    Comment[]
   ratings     Rating[]
+  steps       RecipeStep[]
 
   @@map("recipes")
+}
+
+model RecipeStep {
+  id          String   @id @default(cuid())
+  stepNumber  Int
+  instruction String
+  imageUrl    String?
+  duration    Int?     // Duration in minutes for this step
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  recipeId String
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([recipeId, stepNumber])
+  @@map("recipe_steps")
 }
 
 model Chef {
@@ -191,5 +215,8 @@ model Rating {
 // SQLite enum values:
 // UserRole: "ADMIN", "CHEF", "USER"
 // Difficulty: "EASY", "MEDIUM", "HARD"
+// Complexity: "EASY", "MEDIUM", "HARD"
+// FlavorType: "SWEET", "SAVORY"
+// MealType: "BREAKFAST", "LUNCH", "SNACK", "DINNER"
 // CategoryType: "DIFFICULTY", "MEAL_TYPE", "CUISINE", "DIETARY", "FLAVOR", "CALORIES", "OCCASION"
 // IngredientCategory: "PROTEIN", "VEGETABLE", "FRUIT", "GRAIN", "DAIRY", "SPICE", "HERB", "SAUCE", "OTHER"

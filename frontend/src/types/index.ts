@@ -2,7 +2,8 @@
 export interface User {
   id: string;
   email: string;
-  username: string;
+  name: string;
+  role: string;
   firstName?: string;
   lastName?: string;
   bio?: string;
@@ -14,7 +15,7 @@ export interface User {
 
 export interface CreateUserRequest {
   email: string;
-  username: string;
+  name: string;
   password: string;
   firstName?: string;
   lastName?: string;
@@ -39,23 +40,63 @@ export const Difficulty = {
 
 export type DifficultyType = typeof Difficulty[keyof typeof Difficulty];
 
+export const Complexity = {
+  EASY: 'EASY',
+  MEDIUM: 'MEDIUM',
+  HARD: 'HARD',
+} as const;
+
+export type ComplexityType = typeof Complexity[keyof typeof Complexity];
+
+export const FlavorType = {
+  SWEET: 'SWEET',
+  SAVORY: 'SAVORY',
+} as const;
+
+export type FlavorTypeEnum = typeof FlavorType[keyof typeof FlavorType];
+
+export const MealType = {
+  BREAKFAST: 'BREAKFAST',
+  LUNCH: 'LUNCH',
+  SNACK: 'SNACK',
+  DINNER: 'DINNER',
+} as const;
+
+export type MealTypeEnum = typeof MealType[keyof typeof MealType];
+
 export interface Recipe {
   id: string;
   title: string;
   description: string;
-  instructions: string[];
+  instructions: string;
   prepTime: number; // in minutes
   cookTime: number; // in minutes
   servings: number;
   difficulty: DifficultyType;
   imageUrl?: string;
+  estimatedCalories?: number;
+  
+  // New categorization fields
+  complexity: ComplexityType;
+  flavorType: FlavorTypeEnum;
+  mealType: MealTypeEnum;
+  isLowCalorie: boolean;
+  
   createdAt: string;
   updatedAt: string;
   authorId: string;
   author: User;
-  categoryId: string;
-  category: Category;
+  categories: Array<{
+    id: string;
+    category: {
+      id: string;
+      name: string;
+      type: string;
+      color?: string;
+    };
+  }>;
   ingredients: RecipeIngredient[];
+  steps?: RecipeStep[];
   ratings: Rating[];
   averageRating?: number;
   totalRatings?: number;
@@ -69,7 +110,12 @@ export interface CreateRecipeRequest {
   cookTime: number;
   servings: number;
   difficulty: DifficultyType;
-  categoryId: string;
+  estimatedCalories?: number;
+  complexity: ComplexityType;
+  flavorType: FlavorTypeEnum;
+  mealType: MealTypeEnum;
+  isLowCalorie: boolean;
+  categoryIds: string[];
   ingredients: CreateRecipeIngredientRequest[];
 }
 
@@ -112,6 +158,16 @@ export interface CreateRecipeIngredientRequest {
   quantity: number;
   unit?: string;
   notes?: string;
+}
+
+// Recipe Step types
+export interface RecipeStep {
+  id: string;
+  stepNumber: number;
+  instruction: string;
+  imageUrl?: string;
+  duration?: number; // in minutes
+  recipeId: string;
 }
 
 // Rating types
@@ -157,8 +213,13 @@ export interface PaginatedResponse<T> {
 export interface RecipeFilters {
   category?: string;
   difficulty?: DifficultyType;
+  complexity?: ComplexityType;
+  flavorType?: FlavorTypeEnum;
+  mealType?: MealTypeEnum;
+  isLowCalorie?: boolean;
   prepTimeMax?: number;
   cookTimeMax?: number;
+  caloriesMax?: number;
   search?: string;
   author?: string;
 }

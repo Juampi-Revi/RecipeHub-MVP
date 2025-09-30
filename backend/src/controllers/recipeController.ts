@@ -65,6 +65,11 @@ export const getRecipes = asyncHandler(async (req: Request, res: Response) => {
         : [req.query.categoryIds];
     }
     if (req.query.difficulty) filters.difficulty = req.query.difficulty;
+    // New categorization filters
+    if (req.query.complexity) filters.complexity = req.query.complexity;
+    if (req.query.flavorType) filters.flavorType = req.query.flavorType;
+    if (req.query.mealType) filters.mealType = req.query.mealType;
+    if (req.query.isLowCalorie !== undefined) filters.isLowCalorie = req.query.isLowCalorie === 'true';
     if (req.query.maxPrepTime) filters.maxPrepTime = parseInt(req.query.maxPrepTime as string);
     if (req.query.maxCookTime) filters.maxCookTime = parseInt(req.query.maxCookTime as string);
     if (req.query.maxCalories) filters.maxCalories = parseInt(req.query.maxCalories as string);

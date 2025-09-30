@@ -1,0 +1,44 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#FFF8E1"/>
+  
+  <!-- Cutting Board -->
+  <rect x="50" y="150" width="300" height="120" rx="10" fill="#D2691E"/>
+  <rect x="55" y="155" width="290" height="110" rx="8" fill="#DEB887"/>
+  
+  <!-- Vegetables -->
+  <!-- Tomato -->
+  <circle cx="120" cy="200" r="25" fill="#FF6347"/>
+  <path d="M105 185 Q115 175 125 185 Q135 175 145 185" stroke="#228B22" stroke-width="3" fill="none"/>
+  
+  <!-- Onion -->
+  <circle cx="200" cy="190" r="20" fill="#F5F5DC"/>
+  <circle cx="200" cy="190" r="18" fill="#FFFACD"/>
+  <circle cx="200" cy="190" r="15" fill="#F5F5DC"/>
+  
+  <!-- Carrot -->
+  <ellipse cx="280" cy="210" rx="8" ry="30" fill="#FF8C00"/>
+  <path d="M280 180 L275 175 L285 175 Z" fill="#228B22"/>
+  
+  <!-- Bell Pepper -->
+  <ellipse cx="150" cy="230" rx="18" ry="25" fill="#32CD32"/>
+  <rect x="145" y="205" width="10" height="8" fill="#228B22"/>
+  
+  <!-- Knife -->
+  <rect x="250" y="160" width="80" height="8" fill="#C0C0C0"/>
+  <rect x="320" y="155" width="15" height="18" fill="#8B4513"/>
+  
+  <!-- Chef Hat (floating above) -->
+  <ellipse cx="200" cy="80" rx="60" ry="25" fill="#FFFFFF"/>
+  <rect x="160" y="55" width="80" height="50" fill="#FFFFFF"/>
+  <ellipse cx="200" cy="55" rx="40" ry="15" fill="#FFFFFF"/>
+  
+  <!-- Steam Lines -->
+  <path d="M100 120 Q105 110 100 100 Q95 90 100 80" stroke="#E0E0E0" stroke-width="2" fill="none"/>
+  <path d="M130 115 Q135 105 130 95 Q125 85 130 75" stroke="#E0E0E0" stroke-width="2" fill="none"/>
+  <path d="M300 125 Q305 115 300 105 Q295 95 300 85" stroke="#E0E0E0" stroke-width="2" fill="none"/>
+  
+  <!-- Herbs -->
+  <path d="M320 240 Q325 235 330 240 Q335 235 340 240" stroke="#228B22" stroke-width="2" fill="none"/>
+  <path d="M70 240 Q75 235 80 240 Q85 235 90 240" stroke="#228B22" stroke-width="2" fill="none"/>
+</svg>

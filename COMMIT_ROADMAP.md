@@ -568,19 +568,16 @@ URL should reflect filters
 ### Commit 25: Frontend Error Handling
 **Branch**: `feat/frontend-errors`
 ```bash
-# What to do:
 - Create error boundary component
 - Add global error handling
 - Implement retry mechanisms
 - Add toast notifications
 
-# Files to create:
 frontend/src/components/ErrorBoundary.tsx
 frontend/src/components/ui/Toast.tsx
 frontend/src/context/ToastContext.tsx
 frontend/src/hooks/useToast.ts
 
-# Test:
 Error boundary should catch errors
 Toast notifications should work
 Retry mechanisms should function

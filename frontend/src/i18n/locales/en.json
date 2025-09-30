@@ -14,7 +14,11 @@
     "back": "Back",
     "next": "Next",
     "previous": "Previous",
-    "close": "Close"
+    "close": "Close",
+    "pageOf": "Page {{current}} of {{total}}",
+    "showingResults": "Showing {{from}} to {{to}} of {{total}} results",
+    "noResults": "No results found",
+    "resultsPerPage": "Results per page"
   },
   "navigation": {
     "home": "Home",
@@ -23,7 +27,38 @@
     "profile": "Profile",
     "signIn": "Sign In",
     "signOut": "Sign Out",
-    "register": "Register"
+    "register": "Register",
+    "signUp": "Sign Up",
+    "browseRecipes": "Browse Recipes"
+  },
+  "error": {
+    "boundary": {
+      "title": "Something went wrong",
+      "description": "We're sorry, but something unexpected happened. Please try refreshing the page or contact support if the problem persists.",
+      "showDetails": "Show Details",
+      "reload": "Reload Page",
+      "goBack": "Go Back"
+    },
+    "network": {
+      "title": "Network Error",
+      "message": "Unable to connect to the server. Please check your internet connection and try again."
+    },
+    "notFound": {
+      "title": "Not Found",
+      "message": "The requested resource could not be found."
+    },
+    "loadingRecipes": "Error loading recipes. Please try again.",
+    "loadingRecipe": {
+      "title": "Error Loading Recipe",
+      "message": "Unable to load the recipe. Please try again later."
+    },
+    "badRequest": "Invalid request. Please check your input and try again.",
+    "unauthorized": "You are not authorized to perform this action. Please sign in and try again.",
+    "forbidden": "Access denied. You don't have permission to access this resource.",
+    "validation": "Please check your input and correct any errors.",
+    "tooManyRequests": "Too many requests. Please wait a moment and try again.",
+    "serverError": "Server error. Please try again later.",
+    "unknown": "An unexpected error occurred. Please try again."
   },
   "home": {
     "title": "Welcome to RecipeHub",
@@ -68,16 +103,75 @@
     "searchPlaceholder": "Search recipes...",
     "noResults": "No recipes found",
     "difficulty": {
+      "EASY": "Easy",
+      "MEDIUM": "Medium",
+      "HARD": "Hard",
       "easy": "Easy",
       "medium": "Medium",
       "hard": "Hard"
+    },
+    "complexity": {
+      "EASY": "Simple",
+      "MEDIUM": "Moderate",
+      "HARD": "Complex"
+    },
+    "flavorType": {
+      "SWEET": "Sweet",
+      "SAVORY": "Savory"
+    },
+    "mealType": {
+      "BREAKFAST": "Breakfast",
+      "LUNCH": "Lunch",
+      "SNACK": "Snack",
+      "DINNER": "Dinner"
+    },
+    "filters": {
+      "category": "Category",
+      "allCategories": "All Categories",
+      "difficulty": "Difficulty",
+      "allDifficulties": "All Difficulties",
+      "complexity": "Complexity",
+      "allComplexities": "All Complexities",
+      "flavorType": "Flavor Type",
+      "allFlavorTypes": "All Flavor Types",
+      "mealType": "Meal Type",
+      "allMealTypes": "All Meal Types",
+      "lowCalorie": "Low Calorie",
+      "lowCalorieOnly": "Low calorie only",
+      "maxCalories": "Max Calories",
+      "maxCaloriesPlaceholder": "e.g. 500",
+      "sortBy": "Sort By"
+    },
+    "sort": {
+      "newest": "Newest",
+      "oldest": "Oldest",
+      "nameAZ": "Name A-Z",
+      "nameZA": "Name Z-A"
     },
     "cookingTime": "Cooking Time",
     "servings": "Servings",
     "ingredients": "Ingredients",
     "instructions": "Instructions",
+    "step": "Step",
     "rating": "Rating",
-    "reviews": "Reviews"
+    "reviews": "Reviews",
+    "author": "by",
+    "category": "Category",
+    "categories": {
+      "Breakfast": "Breakfast",
+      "Lunch": "Lunch", 
+      "Dinner": "Dinner",
+      "Snacks": "Snacks",
+      "Desserts": "Desserts",
+      "Healthy": "Healthy",
+      "Vegetarian": "Vegetarian",
+      "Easy": "Easy",
+      "Medium": "Medium",
+      "Hard": "Hard",
+      "Italian": "Italian",
+      "Mediterranean": "Mediterranean",
+      "American": "American"
+    }
   },
   "auth": {
     "signIn": {
@@ -101,14 +195,72 @@
       "createAccount": "Create Account",
       "hasAccount": "Already have an account?",
       "signInLink": "Sign in here"
+    },
+    "errors": {
+      "invalidCredentials": "Invalid email or password. Please check your credentials and try again.",
+      "userNotFound": "No account found with this email address.",
+      "emailExists": "An account with this email already exists.",
+      "passwordRequirements": "Password does not meet the requirements.",
+      "networkError": "Network connection error. Please check your internet connection.",
+      "serverError": "Server error. Please try again later.",
+      "generic": "Authentication failed. Please try again.",
+      "unexpected": "An unexpected error occurred. Please try again."
     }
   },
   "profile": {
     "title": "My Profile",
-    "personalInfo": "Personal Information",
-    "myRecipes": "My Recipes",
-    "favorites": "Favorites",
-    "settings": "Settings"
+    "menu": {
+      "personalInfo": "Personal Information",
+      "myRecipes": "My Recipes",
+      "favorites": "Favorites",
+      "comments": "My Comments"
+    },
+    "personalInfo": {
+      "title": "Personal Information",
+      "subtitle": "Manage your account information and preferences.",
+      "name": "Full Name",
+      "email": "Email Address",
+      "statistics": "Account Statistics",
+      "recipesCreated": "Recipes Created",
+      "favoriteRecipes": "Favorite Recipes",
+      "commentsLeft": "Comments Left",
+      "editProfile": "Edit Profile"
+    },
+    "myRecipes": {
+      "title": "My Recipes",
+      "subtitle": "Manage your created recipes.",
+      "createNew": "Create New Recipe",
+      "createFirst": "Create Your First Recipe",
+      "noRecipes": "No recipes yet",
+      "noRecipesDescription": "You haven't created any recipes yet. Start sharing your culinary creations!",
+      "edit": "Edit Recipe",
+      "delete": "Delete Recipe",
+      "confirmDelete": "Are you sure you want to delete '{{name}}'? This action cannot be undone.",
+      "deleteSuccess": "Recipe deleted successfully",
+      "deleteError": "Error deleting recipe",
+      "createFormComingSoon": "Recipe creation form coming soon!",
+      "editFormComingSoon": "Recipe editing form coming soon!"
+    },
+    "favorites": {
+      "title": "Favorite Recipes",
+      "subtitle": "Your saved recipes from other chefs.",
+      "noFavorites": "No favorites yet",
+      "noFavoritesDescription": "You haven't saved any recipes as favorites yet. Explore recipes and save the ones you love!",
+      "exploreRecipes": "Explore Recipes",
+      "addedOn": "Added on",
+      "removeFromFavorites": "Remove from favorites",
+      "viewRecipe": "View Recipe"
+    },
+    "comments": {
+      "title": "My Comments",
+      "subtitle": "Reviews and comments you've left on recipes.",
+      "noComments": "No comments yet",
+      "noCommentsDescription": "You haven't left any comments yet. Try some recipes and share your experience!",
+      "exploreRecipes": "Explore Recipes",
+      "editComment": "Edit Comment",
+      "deleteComment": "Delete Comment",
+      "viewRecipe": "View Recipe"
+    }
   },
   "footer": {
     "quickLinks": "Quick Links",

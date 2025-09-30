@@ -14,7 +14,12 @@
     "back": "Atrás",
     "next": "Siguiente",
     "previous": "Anterior",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "translationNotAvailable": "(Traducción no disponible)",
+    "pageOf": "Página {{current}} de {{total}}",
+    "showingResults": "Mostrando {{from}} a {{to}} de {{total}} resultados",
+    "noResults": "No se encontraron resultados",
+    "resultsPerPage": "Resultados por página"
   },
   "navigation": {
     "home": "Inicio",
@@ -23,7 +28,38 @@
     "profile": "Perfil",
     "signIn": "Iniciar Sesión",
     "signOut": "Cerrar Sesión",
-    "register": "Registrarse"
+    "register": "Registrarse",
+    "signUp": "Registrarse",
+    "browseRecipes": "Explorar Recetas"
+  },
+  "error": {
+    "boundary": {
+      "title": "Algo salió mal",
+      "description": "Lo sentimos, pero algo inesperado ocurrió. Por favor intenta refrescar la página o contacta soporte si el problema persiste.",
+      "showDetails": "Mostrar Detalles",
+      "reload": "Recargar Página",
+      "goBack": "Volver"
+    },
+    "network": {
+      "title": "Error de Red",
+      "message": "No se pudo conectar al servidor. Por favor verifica tu conexión a internet e intenta de nuevo."
+    },
+    "notFound": {
+      "title": "No Encontrado",
+      "message": "El recurso solicitado no pudo ser encontrado."
+    },
+    "loadingRecipes": "Error cargando recetas. Por favor intenta de nuevo.",
+    "loadingRecipe": {
+      "title": "Error Cargando Receta",
+      "message": "No se pudo cargar la receta. Por favor intenta de nuevo más tarde."
+    },
+    "badRequest": "Solicitud inválida. Por favor verifica tu entrada e intenta de nuevo.",
+    "unauthorized": "No estás autorizado para realizar esta acción. Por favor inicia sesión e intenta de nuevo.",
+    "forbidden": "Acceso denegado. No tienes permisos para acceder a este recurso.",
+    "validation": "Por favor verifica tu entrada y corrige cualquier error.",
+    "tooManyRequests": "Demasiadas solicitudes. Por favor espera un momento e intenta de nuevo.",
+    "serverError": "Error del servidor. Por favor intenta de nuevo más tarde.",
+    "unknown": "Ocurrió un error inesperado. Por favor intenta de nuevo."
   },
   "home": {
     "title": "Bienvenido a RecipeHub",
@@ -67,17 +103,142 @@
     "title": "Recetas",
     "searchPlaceholder": "Buscar recetas...",
     "noResults": "No se encontraron recetas",
+    "by": "por",
+    "anonymous": "Anónimo",
     "difficulty": {
+      "EASY": "Fácil",
+      "MEDIUM": "Medio", 
+      "HARD": "Difícil",
       "easy": "Fácil",
       "medium": "Medio",
       "hard": "Difícil"
     },
+    "complexity": {
+      "EASY": "Simple",
+      "MEDIUM": "Moderado",
+      "HARD": "Complejo"
+    },
+    "flavorType": {
+      "SWEET": "Dulce",
+      "SAVORY": "Salado"
+    },
+    "mealType": {
+      "BREAKFAST": "Desayuno",
+      "LUNCH": "Almuerzo",
+      "SNACK": "Merienda",
+      "DINNER": "Cena"
+    },
+    "filters": {
+      "category": "Categoría",
+      "allCategories": "Todas las Categorías",
+      "difficulty": "Dificultad",
+      "allDifficulties": "Todas las Dificultades",
+      "complexity": "Complejidad",
+      "allComplexities": "Todas las Complejidades",
+      "flavorType": "Tipo de Sabor",
+      "allFlavorTypes": "Todos los Tipos de Sabor",
+      "mealType": "Tipo de Comida",
+      "allMealTypes": "Todos los Tipos de Comida",
+      "lowCalorie": "Bajo en Calorías",
+      "lowCalorieOnly": "Solo bajo en calorías",
+      "maxCalories": "Máximo de Calorías",
+      "maxCaloriesPlaceholder": "ej. 500",
+      "sortBy": "Ordenar por"
+    },
+    "sort": {
+      "newest": "Más Recientes",
+      "oldest": "Más Antiguos",
+      "rating": "Mejor Calificados",
+      "cookingTime": "Tiempo de Cocción",
+      "nameAZ": "Nombre A-Z",
+      "nameZA": "Nombre Z-A"
+    },
     "cookingTime": "Tiempo de Cocción",
+    "cookTime": "Tiempo de Cocción",
     "servings": "Porciones",
     "ingredients": "Ingredientes",
     "instructions": "Instrucciones",
+    "step": "Paso",
     "rating": "Calificación",
-    "reviews": "Reseñas"
+    "reviews": "Reseñas",
+    "author": "por",
+    "category": "Categoría",
+    "categories": {
+      "Breakfast": "Desayuno",
+      "Lunch": "Almuerzo", 
+      "Dinner": "Cena",
+      "Snacks": "Aperitivos",
+      "Desserts": "Postres",
+      "Healthy": "Saludable",
+      "Vegetarian": "Vegetariano",
+      "Easy": "Fácil",
+      "Medium": "Intermedio",
+      "Hard": "Difícil",
+      "Italian": "Italiana",
+      "Mediterranean": "Mediterránea",
+      "American": "Americana"
+    },
+    "additionalInfo": "Información Adicional"
+  },
+  "ingredients": {
+    "Chicken Breast": "Pechuga de Pollo",
+    "Salmon Fillet": "Filete de Salmón",
+    "Ground Beef": "Carne Molida",
+    "Eggs": "Huevos",
+    "Tomatoes": "Tomates",
+    "Onions": "Cebollas",
+    "Garlic": "Ajo",
+    "Bell Peppers": "Pimientos",
+    "Spinach": "Espinacas",
+    "Pasta": "Pasta",
+    "Rice": "Arroz",
+    "Bread": "Pan",
+    "Mozzarella Cheese": "Queso Mozzarella",
+    "Parmesan Cheese": "Queso Parmesano",
+    "Heavy Cream": "Crema Espesa",
+    "Butter": "Mantequilla",
+    "Basil": "Albahaca",
+    "Oregano": "Orégano",
+    "Black Pepper": "Pimienta Negra",
+    "Salt": "Sal",
+    "Olive Oil": "Aceite de Oliva",
+    "Tomato Sauce": "Salsa de Tomate",
+    "Avocado": "Aguacate",
+    "Lime": "Lima",
+    "Coconut Milk": "Leche de Coco",
+    "Green Curry Paste": "Pasta de Curry Verde",
+    "Flour": "Harina",
+    "Milk": "Leche",
+    "Sugar": "Azúcar",
+    "Mushrooms": "Champiñones",
+    "Arborio Rice": "Arroz Arborio",
+    "White Wine": "Vino Blanco",
+    "Quinoa": "Quinoa",
+    "Sweet Potato": "Batata",
+    "Brussels Sprouts": "Coles de Bruselas",
+    "Kale": "Col Rizada",
+    "Chickpeas": "Garbanzos",
+    "Tahini": "Tahini",
+    "Beef Tenderloin": "Lomo de Res",
+    "Puff Pastry": "Masa Hojaldre",
+    "Dijon Mustard": "Mostaza Dijon",
+    "Mixed Berries": "Frutos Rojos Mixtos",
+    "Maple Syrup": "Jarabe de Arce",
+    "Baking Powder": "Polvo de Hornear",
+    "Tortillas": "Tortillas",
+    "Cumin": "Comino",
+    "Chili Powder": "Chile en Polvo",
+    "Cilantro": "Cilantro"
+  },
+  "recipeInstructions": {
+    "Toast bread slices until golden brown": "Tostar las rebanadas de pan hasta que estén doradas",
+    "Mash ripe avocado with lime juice, salt, and pepper": "Machacar el aguacate maduro con jugo de lima, sal y pimienta",
+    "Bring water to a gentle simmer in a saucepan": "Llevar agua a fuego lento en una cacerola",
+    "Add a splash of vinegar to the water": "Agregar un chorrito de vinagre al agua",
+    "Crack egg into a small bowl, then gently slide into water": "Romper el huevo en un tazón pequeño, luego deslizarlo suavemente en el agua",
+    "Poach for 3-4 minutes until whites are set": "Escalfar por 3-4 minutos hasta que las claras estén cuajadas",
+    "Spread avocado mixture on toast": "Extender la mezcla de aguacate sobre la tostada",
+    "Top with poached egg and season with salt and pepper": "Cubrir con el huevo escalfado y sazonar con sal y pimienta"
   },
   "auth": {
     "signIn": {
@@ -101,14 +262,72 @@
       "createAccount": "Crear Cuenta",
       "hasAccount": "¿Ya tienes una cuenta?",
       "signInLink": "Inicia sesión aquí"
+    },
+    "errors": {
+      "invalidCredentials": "Correo electrónico o contraseña incorrectos. Por favor verifica tus credenciales e intenta de nuevo.",
+      "userNotFound": "No se encontró una cuenta con este correo electrónico.",
+      "emailExists": "Ya existe una cuenta con este correo electrónico.",
+      "passwordRequirements": "La contraseña no cumple con los requisitos.",
+      "networkError": "Error de conexión de red. Por favor verifica tu conexión a internet.",
+      "serverError": "Error del servidor. Por favor intenta de nuevo más tarde.",
+      "generic": "Error de autenticación. Por favor intenta de nuevo.",
+      "unexpected": "Ocurrió un error inesperado. Por favor intenta de nuevo."
     }
   },
   "profile": {
     "title": "Mi Perfil",
-    "personalInfo": "Información Personal",
-    "myRecipes": "Mis Recetas",
-    "favorites": "Favoritos",
-    "settings": "Configuración"
+    "menu": {
+      "personalInfo": "Información Personal",
+      "myRecipes": "Mis Recetas",
+      "favorites": "Favoritos",
+      "comments": "Mis Comentarios"
+    },
+    "personalInfo": {
+      "title": "Información Personal",
+      "subtitle": "Gestiona la información de tu cuenta y preferencias.",
+      "name": "Nombre Completo",
+      "email": "Correo Electrónico",
+      "statistics": "Estadísticas de la Cuenta",
+      "recipesCreated": "Recetas Creadas",
+      "favoriteRecipes": "Recetas Favoritas",
+      "commentsLeft": "Comentarios Dejados",
+      "editProfile": "Editar Perfil"
+    },
+    "myRecipes": {
+      "title": "Mis Recetas",
+      "subtitle": "Gestiona tus recetas creadas.",
+      "createNew": "Crear Nueva Receta",
+      "createFirst": "Crea Tu Primera Receta",
+      "noRecipes": "Aún no hay recetas",
+      "noRecipesDescription": "Aún no has creado ninguna receta. ¡Comienza a compartir tus creaciones culinarias!",
+      "edit": "Editar Receta",
+      "delete": "Eliminar Receta",
+      "confirmDelete": "¿Estás seguro de que quieres eliminar '{{name}}'? Esta acción no se puede deshacer.",
+      "deleteSuccess": "Receta eliminada exitosamente",
+      "deleteError": "Error al eliminar la receta",
+      "createFormComingSoon": "¡Formulario de creación de recetas próximamente!",
+      "editFormComingSoon": "¡Formulario de edición de recetas próximamente!"
+    },
+    "favorites": {
+      "title": "Recetas Favoritas",
+      "subtitle": "Tus recetas guardadas de otros chefs.",
+      "noFavorites": "Aún no hay favoritos",
+      "noFavoritesDescription": "Aún no has guardado ninguna receta como favorita. ¡Explora recetas y guarda las que te gusten!",
+      "exploreRecipes": "Explorar Recetas",
+      "addedOn": "Agregado el",
+      "removeFromFavorites": "Quitar de favoritos",
+      "viewRecipe": "Ver Receta"
+    },
+    "comments": {
+      "title": "Mis Comentarios",
+      "subtitle": "Reseñas y comentarios que has dejado en recetas.",
+      "noComments": "Aún no hay comentarios",
+      "noCommentsDescription": "Aún no has dejado ningún comentario. ¡Prueba algunas recetas y comparte tu experiencia!",
+      "exploreRecipes": "Explorar Recetas",
+      "editComment": "Editar Comentario",
+      "deleteComment": "Eliminar Comentario",
+      "viewRecipe": "Ver Receta"
+    }
   },
   "footer": {
     "quickLinks": "Enlaces Rápidos",

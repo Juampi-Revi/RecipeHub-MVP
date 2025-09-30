@@ -12,7 +12,7 @@ import {
   publishRecipe,
   unpublishRecipe
 } from '../controllers/recipeController';
-import { authenticate, optionalAuth } from '../middleware/auth';
+import { authenticate, optionalAuth, requireAdmin } from '../middleware/auth';
 
 const router = Router();
 

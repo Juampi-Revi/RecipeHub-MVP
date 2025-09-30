@@ -111,15 +111,12 @@ export const login = asyncHandler(async (req: Request, res: Response): Promise<v
   const { password: _, ...userWithoutPassword } = user;
 
   sendSuccessResponse(res, {
-    message: 'Login successful',
-    data: {
-      user: userWithoutPassword,
-      tokens: {
-        accessToken,
-        refreshToken,
-      },
+    user: userWithoutPassword,
+    tokens: {
+      accessToken,
+      refreshToken,
     },
-  });
+  }, 'Login successful');
 });
 
 export const refresh = asyncHandler(async (req: Request, res: Response): Promise<void> => {

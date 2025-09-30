@@ -82,6 +82,11 @@ export const createRecipeSchema = z.object({
     .min(1, 'Calories must be positive')
     .max(10000, 'Calories seem unrealistic')
     .optional(),
+  // New categorization fields
+  complexity: z.enum(['EASY', 'MEDIUM', 'HARD']).default('MEDIUM'),
+  flavorType: z.enum(['SWEET', 'SAVORY']).default('SAVORY'),
+  mealType: z.enum(['BREAKFAST', 'LUNCH', 'SNACK', 'DINNER']).default('LUNCH'),
+  isLowCalorie: z.boolean().default(false),
   categoryIds: z.array(idSchema).min(1, 'At least one category is required'),
   ingredients: z.array(z.object({
     ingredientId: idSchema,
@@ -192,6 +197,11 @@ export const recipeFiltersSchema = z.object({
   search: z.string().min(1, 'Search term must not be empty').optional(),
   categoryIds: z.array(z.string().cuid('Invalid category ID')).optional(),
   difficulty: z.enum(['EASY', 'MEDIUM', 'HARD']).optional(),
+  // New categorization filters
+  complexity: z.enum(['EASY', 'MEDIUM', 'HARD']).optional(),
+  flavorType: z.enum(['SWEET', 'SAVORY']).optional(),
+  mealType: z.enum(['BREAKFAST', 'LUNCH', 'SNACK', 'DINNER']).optional(),
+  isLowCalorie: z.boolean().optional(),
   maxPrepTime: z.number().int().positive('Max prep time must be positive').optional(),
   maxCookTime: z.number().int().positive('Max cook time must be positive').optional(),
   maxTotalTime: z.number().int().positive('Max total time must be positive').optional(),

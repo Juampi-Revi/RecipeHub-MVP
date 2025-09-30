@@ -1,31 +1,27 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
-  username  String   @unique
+  name      String
+  role      String   @default("USER")
   password  String
-  firstName String?
-  lastName  String?
-  bio       String?
   avatar    String?
-  isActive  Boolean  @default(true)
+  bio       String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations
-  recipes Recipe[]
-  ratings Rating[]
+  ownedRecipes Recipe[]
+  likedRecipes RecipeLike[]
+  comments     Comment[]
+  ratings      Rating[]
 
   @@map("users")
 }
@@ -34,87 +30,157 @@ model Category {
   id          String   @id @default(cuid())
   name        String   @unique
   description String?
-  slug        String   @unique
-  isActive    Boolean  @default(true)
+  type        String
+  color       String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  // Relations
-  recipes Recipe[]
+  recipes RecipeCategory[]
 
   @@map("categories")
 }
 
 model Recipe {
-  id           String        @id @default(cuid())
-  title        String
-  description  String?
-  instructions String
-  prepTime     Int // in minutes
-  cookTime     Int // in minutes
-  servings     Int
-  difficulty   Difficulty    @default(MEDIUM)
-  imageUrl     String?
-  isPublished  Boolean       @default(false)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id                String   @id @default(cuid())
+  title             String
+  description       String?
+  instructions      String
+  prepTime          Int
+  cookTime          Int
+  servings          Int
+  difficulty        String   @default("MEDIUM")
+  imageUrl          String?
+  isPublished       Boolean  @default(false)
+  estimatedCalories Int?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
-  // Foreign Keys
-  authorId   String
-  categoryId String
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
-  // Relations
-  author      User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  category    Category            @relation(fields: [categoryId], references: [id])
+  categories  RecipeCategory[]
   ingredients RecipeIngredient[]
+  chefs       RecipeChef[]
+  likes       RecipeLike[]
+  comments    Comment[]
   ratings     Rating[]
 
   @@map("recipes")
 }
 
+model Chef {
+  id              String   @id @default(cuid())
+  name            String
+  bio             String?
+  imageUrl        String?
+  specialties     String?
+  yearsExperience Int?
+  isVerified      Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  recipes RecipeChef[]
+
+  @@map("chefs")
+}
+
 model Ingredient {
   id        String   @id @default(cuid())
   name      String   @unique
-  unit      String? // e.g., "cup", "tablespoon", "gram"
+  category  String
+  unit      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations
   recipes RecipeIngredient[]
 
   @@map("ingredients")
 }
 
-model RecipeIngredient {
-  id       String @id @default(cuid())
-  quantity Float
-  unit     String?
-  notes    String?
+model RecipeCategory {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
 
-  // Foreign Keys
+  recipeId   String
+  categoryId String
+
+  recipe   Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([recipeId, categoryId])
+  @@map("recipe_categories")
+}
+
+model RecipeIngredient {
+  id           String   @id @default(cuid())
+  quantity     Float
+  unit         String?
+  notes        String?
+  createdAt    DateTime @default(now())
+
   recipeId     String
   ingredientId String
 
-  // Relations
   recipe     Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
-  ingredient Ingredient @relation(fields: [ingredientId], references: [id])
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
 
   @@unique([recipeId, ingredientId])
   @@map("recipe_ingredients")
 }
 
+model RecipeChef {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  recipeId String
+  chefId   String
+
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  chef   Chef   @relation(fields: [chefId], references: [id], onDelete: Cascade)
+
+  @@unique([recipeId, chefId])
+  @@map("recipe_chefs")
+}
+
+model RecipeLike {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  userId   String
+  recipeId String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, recipeId])
+  @@map("recipe_likes")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId   String
+  recipeId String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
+}
+
 model Rating {
   id        String   @id @default(cuid())
-  rating    Int // 1-5 stars
+  rating    Int
   comment   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Foreign Keys
   userId   String
   recipeId String
 
-  // Relations
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 
@@ -122,8 +188,8 @@ model Rating {
   @@map("ratings")
 }
 
-enum Difficulty {
-  EASY
-  MEDIUM
-  HARD
-}
+// SQLite enum values:
+// UserRole: "ADMIN", "CHEF", "USER"
+// Difficulty: "EASY", "MEDIUM", "HARD"
+// CategoryType: "DIFFICULTY", "MEAL_TYPE", "CUISINE", "DIETARY", "FLAVOR", "CALORIES", "OCCASION"
+// IngredientCategory: "PROTEIN", "VEGETABLE", "FRUIT", "GRAIN", "DAIRY", "SPICE", "HERB", "SAUCE", "OTHER"

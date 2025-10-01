@@ -163,6 +163,50 @@ cp .env.example .env
 npm run dev
 ```
 
+### Option 3: Complete Manual Setup (No Docker)
+
+**Prerequisites:**
+- [Node.js](https://nodejs.org/) (18.0+)
+- [PostgreSQL](https://www.postgresql.org/) (15.0+)
+- [npm](https://www.npmjs.com/) (9.0+)
+
+```bash
+# 1. Clone repository
+gh repo clone Juampi-Revi/RecipeHub-MVP
+cd RecipeHub-MVP
+
+# 2. Setup PostgreSQL database
+createdb recipehub_dev
+
+# 3. Backend setup
+cd backend
+npm install
+cp .env.example .env
+
+# Edit .env file with your PostgreSQL credentials:
+# DATABASE_URL="postgresql://username:password@localhost:5432/recipehub_dev"
+
+npx prisma generate
+npx prisma migrate dev
+npx prisma db seed  # Optional: add sample data
+
+# 4. Frontend setup (new terminal)
+cd frontend
+npm install
+cp .env.example .env
+
+# 5. Start servers
+# Terminal 1: Backend
+cd backend && npm run dev
+
+# Terminal 2: Frontend  
+cd frontend && npm run dev
+```
+
+**Access:**
+- Frontend: http://localhost:5173
+- Backend: http://localhost:3001
+
 ## ⚙️ Environment Configuration
 
 ### Backend Environment Variables

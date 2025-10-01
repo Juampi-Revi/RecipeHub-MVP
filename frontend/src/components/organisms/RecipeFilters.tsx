@@ -1,6 +1,6 @@
-import { memo } from 'react';
+import { memo, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { RecipeFilters as RecipeFiltersType, SortParams, DifficultyType, ComplexityType, FlavorTypeEnum, MealTypeEnum } from '../../types';
+import type { RecipeFilters as RecipeFiltersType, SortParams, ComplexityType, MealTypeEnum } from '../../types';
 
 interface RecipeFiltersProps {
   filters: RecipeFiltersType & SortParams;
@@ -10,10 +10,56 @@ interface RecipeFiltersProps {
 
 export const RecipeFilters = memo(function RecipeFilters({ filters, categories, onFiltersChange }: RecipeFiltersProps) {
   const { t } = useTranslation();
+  const [searchInput, setSearchInput] = useState(filters.search || '');
+
+  // Sincronizar el estado local con los filtros externos
+  useEffect(() => {
+    setSearchInput(filters.search || '');
+  }, [filters.search]);
+
+  const handleClearFilters = () => {
+    setSearchInput('');
+    onFiltersChange({
+      search: undefined,
+      category: undefined,
+      complexity: undefined,
+      mealType: undefined,
+      sortBy: 'createdAt',
+      sortOrder: 'desc'
+    });
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onFiltersChange({ search: searchInput || undefined });
+    }
+  };
+
+  const hasActiveFilters = filters.search || filters.category || filters.complexity || filters.mealType;
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      {/* Search Bar */}
+      <div className="mb-6">
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+          </div>
+          <input
+            type="text"
+            value={searchInput}
+            placeholder={t('recipes.searchPlaceholder')}
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white text-lg"
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={handleSearchKeyDown}
+          />
+        </div>
+      </div>
+
+      {/* Filters Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         {/* Category Filter */}
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -30,23 +76,6 @@ export const RecipeFilters = memo(function RecipeFilters({ filters, categories, 
                 {category.name}
               </option>
             ))}
-          </select>
-        </div>
-
-        {/* Difficulty Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            {t('recipes.filters.difficulty')}
-          </label>
-          <select
-            value={filters.difficulty || ''}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
-            onChange={(e) => onFiltersChange({ difficulty: (e.target.value as DifficultyType) || undefined })}
-          >
-            <option value="">{t('recipes.filters.allDifficulties')}</option>
-            <option value="EASY">{t('recipes.difficulty.EASY')}</option>
-            <option value="MEDIUM">{t('recipes.difficulty.MEDIUM')}</option>
-            <option value="HARD">{t('recipes.difficulty.HARD')}</option>
           </select>
         </div>
 
@@ -67,22 +96,6 @@ export const RecipeFilters = memo(function RecipeFilters({ filters, categories, 
           </select>
         </div>
 
-        {/* Flavor Type Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            {t('recipes.filters.flavorType')}
-          </label>
-          <select
-            value={filters.flavorType || ''}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
-            onChange={(e) => onFiltersChange({ flavorType: (e.target.value as FlavorTypeEnum) || undefined })}
-          >
-            <option value="">{t('recipes.filters.allFlavorTypes')}</option>
-            <option value="SWEET">{t('recipes.flavorType.SWEET')}</option>
-            <option value="SAVORY">{t('recipes.flavorType.SAVORY')}</option>
-          </select>
-        </div>
-
         {/* Meal Type Filter */}
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -99,38 +112,6 @@ export const RecipeFilters = memo(function RecipeFilters({ filters, categories, 
             <option value="SNACK">{t('recipes.mealType.SNACK')}</option>
             <option value="DINNER">{t('recipes.mealType.DINNER')}</option>
           </select>
-        </div>
-
-        {/* Low Calorie Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            {t('recipes.filters.lowCalorie')}
-          </label>
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              checked={filters.isLowCalorie || false}
-              className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-              onChange={(e) => onFiltersChange({ isLowCalorie: e.target.checked || undefined })}
-            />
-            <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-              {t('recipes.filters.lowCalorieOnly')}
-            </span>
-          </div>
-        </div>
-
-        {/* Max Calories Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            {t('recipes.filters.maxCalories')}
-          </label>
-          <input
-            type="number"
-            value={filters.caloriesMax || ''}
-            placeholder={t('recipes.filters.maxCaloriesPlaceholder')}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
-            onChange={(e) => onFiltersChange({ caloriesMax: e.target.value ? parseInt(e.target.value) : undefined })}
-          />
         </div>
 
         {/* Sort */}
@@ -156,6 +137,18 @@ export const RecipeFilters = memo(function RecipeFilters({ filters, categories, 
           </select>
         </div>
       </div>
+
+      {/* Clear Filters Button */}
+      {hasActiveFilters && (
+        <div className="flex justify-end">
+          <button
+            onClick={handleClearFilters}
+            className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 underline"
+          >
+            Clear filters
+          </button>
+        </div>
+      )}
     </div>
   );
 });

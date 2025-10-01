@@ -57,18 +57,18 @@ export function useRecipeForm() {
     const newErrors: FormErrors = {};
 
     if (!formData.title.trim()) {
-      newErrors.title = 'El título es requerido';
+      newErrors.title = 'Title is required';
     }
 
     if (!formData.instructions.trim()) {
-      newErrors.instructions = 'Las instrucciones son requeridas';
+      newErrors.instructions = 'Instructions are required';
     } else if (formData.instructions.trim().length < 10) {
-      newErrors.instructions = 'Las instrucciones deben tener al menos 10 caracteres';
+      newErrors.instructions = 'Instructions must be at least 10 characters long';
     }
 
     // Validate description if provided
     if (formData.description && formData.description.trim() && formData.description.trim().length < 10) {
-      newErrors.description = 'La descripción debe tener al menos 10 caracteres';
+      newErrors.description = 'Description must be at least 10 characters long';
     }
 
     // Validate imageUrl if provided
@@ -77,30 +77,30 @@ export function useRecipeForm() {
       const basicUrlPattern = /^https?:\/\/.+/;
       
       if (!basicUrlPattern.test(formData.imageUrl.trim())) {
-        newErrors.imageUrl = 'Ingresa una URL válida que comience con http:// o https://';
+        newErrors.imageUrl = 'Enter a valid URL starting with http:// or https://';
       } else if (!imageUrlPattern.test(formData.imageUrl.trim())) {
-        newErrors.imageUrl = 'La URL debe apuntar a una imagen válida (.jpg, .jpeg, .png, .gif, .webp, .svg)';
+        newErrors.imageUrl = 'URL must point to a valid image (.jpg, .jpeg, .png, .gif, .webp, .svg)';
       }
     }
 
     if (formData.prepTime <= 0) {
-      newErrors.prepTime = 'El tiempo de preparación debe ser mayor a 0';
+      newErrors.prepTime = 'Preparation time must be greater than 0';
     }
 
     if (formData.cookTime <= 0) {
-      newErrors.cookTime = 'El tiempo de cocción debe ser mayor a 0';
+      newErrors.cookTime = 'Cooking time must be greater than 0';
     }
 
     if (formData.servings <= 0) {
-      newErrors.servings = 'Las porciones deben ser mayor a 0';
+      newErrors.servings = 'Servings must be greater than 0';
     }
 
     if (formData.categoryIds.length === 0) {
-      newErrors.categoryIds = 'Selecciona al menos una categoría';
+      newErrors.categoryIds = 'Select at least one category';
     }
 
     if (formData.ingredients.length === 0) {
-      newErrors.ingredients = 'Agrega al menos un ingrediente';
+      newErrors.ingredients = 'Add at least one ingredient';
     }
 
     setErrors(newErrors);

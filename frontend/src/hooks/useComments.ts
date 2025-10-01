@@ -74,10 +74,10 @@ export function useCreateComment() {
       // Invalidate general comments list
       queryClient.invalidateQueries({ queryKey: commentKeys.lists() });
       
-      success('Comentario agregado exitosamente');
+      success('Comment added successfully');
     },
     onError: (err: ApiError) => {
-      error(err.message || 'Error al agregar comentario');
+      error(err.message || 'Error adding comment');
     },
   });
 }
@@ -97,10 +97,10 @@ export function useUpdateComment() {
       // Invalidate my comments
       queryClient.invalidateQueries({ queryKey: commentKeys.myComments() });
       
-      success('Comentario actualizado exitosamente');
+      success('Comment updated successfully');
     },
     onError: (err: ApiError) => {
-      error(err.message || 'Error al actualizar comentario');
+      error(err.message || 'Error updating comment');
     },
   });
 }
@@ -115,10 +115,10 @@ export function useDeleteComment() {
       // Remove from all relevant queries
       queryClient.invalidateQueries({ queryKey: commentKeys.all });
       
-      success('Comentario eliminado exitosamente');
+      success('Comment deleted successfully');
     },
     onError: (err: ApiError) => {
-      error(err.message || 'Error al eliminar comentario');
+      error(err.message || 'Error deleting comment');
     },
   });
 }
@@ -136,10 +136,10 @@ export function useReportComment() {
       // Invalidate recipe comments to show updated state
       queryClient.invalidateQueries({ queryKey: commentKeys.recipeComments(reportedComment.recipeId) });
       
-      success('Comentario reportado. En revisión por el equipo de Customer Experience');
+      success('Comment reported. Under review by the Customer Experience team');
     },
     onError: (err: ApiError) => {
-      error(err.message || 'Error al reportar comentario');
+      error(err.message || 'Error reporting comment');
     },
   });
 }
@@ -161,10 +161,10 @@ export function useReplyToComment() {
       // Invalidate my comments
       queryClient.invalidateQueries({ queryKey: commentKeys.myComments() });
       
-      success('Respuesta agregada exitosamente');
+      success('Reply added successfully');
     },
     onError: (err: ApiError) => {
-      error(err.message || 'Error al agregar respuesta');
+      error(err.message || 'Error adding reply');
     },
   });
 }

@@ -11,7 +11,7 @@ import type {
 
 export interface RecipeSearchParams {
   search?: string;
-  categoryIds?: string[];
+  category?: string;
   difficulty?: string;
   // New categorization filters
   complexity?: string;
@@ -139,7 +139,7 @@ export class RecipeService {
     const queryParams: Record<string, unknown> = {};
 
     if (params.search) queryParams.search = params.search;
-    if (params.categoryIds?.length) queryParams.categoryIds = params.categoryIds.join(',');
+    if (params.category) queryParams.category = params.category;
     if (params.difficulty) queryParams.difficulty = params.difficulty;
     // New categorization filters
     if (params.complexity) queryParams.complexity = params.complexity;

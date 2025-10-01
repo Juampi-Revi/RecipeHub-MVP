@@ -167,8 +167,8 @@ export function RecipeDetailPage() {
                 </div>
               )}
               
-              <span className={`px-3 py-1 rounded-full text-sm font-medium ${difficultyColors[recipe.difficulty as keyof typeof difficultyColors]}`}>
-                {t(`recipes.difficulty.${recipe.difficulty}`)}
+              <span className={`px-3 py-1 rounded-full text-sm font-medium ${difficultyColors[recipe.complexity as keyof typeof difficultyColors]}`}>
+                {t(`recipes.complexity.${recipe.complexity}`)}
               </span>
 
               {recipe.averageRating && (

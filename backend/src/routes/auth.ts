@@ -43,9 +43,9 @@ router.post('/logout', logout);
 /**
  * @route   POST /api/auth/logout-all
  * @desc    Logout user from all devices
- * @access  Public
+ * @access  Private
  */
-router.post('/logout-all', logoutAll);
+router.post('/logout-all', authenticate, logoutAll);
 
 /**
  * @route   GET /api/auth/profile

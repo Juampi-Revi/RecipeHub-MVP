@@ -70,16 +70,16 @@ export function FavoritesPage() {
                     
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Título
+                    Title
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Autor
+                    Author
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Categoría
+                    Category
                   </th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-24">
-                    Acciones
+                    Actions
                   </th>
                 </tr>
               </thead>
@@ -105,12 +105,12 @@ export function FavoritesPage() {
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900 dark:text-white">
-                        {recipe.author?.name || 'Chef Anónimo'}
+                        {recipe.author?.name || 'Anonymous Chef'}
                       </div>
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900 dark:text-white">
-                        {recipe.categories?.[0]?.category?.name || 'Sin categoría'}
+                        {recipe.categories?.[0]?.category?.name || 'No category'}
                       </div>
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap text-right">
@@ -118,14 +118,14 @@ export function FavoritesPage() {
                         <button
                           onClick={() => handleToggleLike(recipe.id)}
                           className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-                          title="Quitar de favoritos"
+                          title="Remove from favorites"
                         >
                           <Heart className="h-5 w-5 fill-current" />
                         </button>
                         <Link
                           to={`/recipes/${recipe.id}`}
                           className="text-orange-600 hover:text-orange-800 dark:text-orange-400 dark:hover:text-orange-300"
-                          title="Ver receta"
+                          title="View recipe"
                         >
                           <Eye className="h-5 w-5" />
                         </Link>

@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { recipeService } from '../services/recipeService';
+import { useRecipes, useCategories } from '../hooks/useRecipes';
 import { RecipeFilters } from '../components/organisms/RecipeFilters';
 import { RecipeCard } from '../components/molecules/RecipeCard';
 import { LoadingCard } from '../components/atoms/LoadingSpinner';
@@ -28,19 +27,10 @@ export function RecipesPage() {
     isLoading: recipesLoading, 
     error: recipesError,
     refetch: refetchRecipes
-  } = useQuery({
-    queryKey: ['recipes', filters],
-    queryFn: () => recipeService.getRecipes(filters),
-    retry: 2,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
+  } = useRecipes(filters);
 
   // Fetch categories
-  const { data: categories } = useQuery({
-    queryKey: ['categories'],
-    queryFn: () => recipeService.getCategories(),
-    staleTime: 30 * 60 * 1000, // 30 minutes
-  });
+  const { data: categories } = useCategories();
 
   // Handle errors
   useEffect(() => {

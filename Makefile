@@ -12,8 +12,8 @@ help:
 	@echo "  make          - Install and start everything"
 	@echo "  make install  - Install dependencies and setup environment"
 	@echo "  make dev      - Start development servers"
-	@echo "  make stop     - Stop all services"
-	@echo "  make clean    - Stop and clean everything"
+	@echo "  make stop     - Stop all services and clean up containers"
+	@echo "  make clean    - Stop and clean everything (including volumes)"
 	@echo "  make logs     - Show logs"
 	@echo ""
 

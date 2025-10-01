@@ -37,10 +37,19 @@ make
 
 ### Other Commands
 ```bash
-make stop    # Stop all services
-make clean   # Stop and remove everything
+make stop    # Stop all services and clean up containers
+make clean   # Stop and remove everything (including volumes)
 make logs    # View logs
 ```
+
+### 🔧 Having Issues?
+If you encounter container conflicts or "port already allocated" errors:
+```bash
+# Stop and clean up, then restart
+make stop
+make
+```
+> 💡 **Tip**: `make stop` now automatically cleans up containers to prevent conflicts. This is especially useful when switching git branches or after Docker crashes. See [Container Conflicts Troubleshooting](#container-conflicts-troubleshooting) for more details.
 
 ## 📋 Table of Contents
 
@@ -735,6 +744,41 @@ docker exec recipehub-api-dev npx prisma db seed
 # Reset database completely (if needed)
 docker exec recipehub-api-dev npx prisma migrate reset --force
 ```
+
+### Container Conflicts Troubleshooting
+
+If you encounter errors like "container name already in use" or "port already allocated", this usually happens when:
+- Previous containers weren't properly stopped
+- You're switching between different branches
+- Docker didn't clean up properly after a crash
+
+**Symptoms:**
+- `Error: Conflict. The container name "/recipehub-redis-dev" is already in use`
+- `Error: port is already allocated`
+- `Network error - please check your connection` (when containers aren't running)
+
+**Solution - Clean up containers:**
+
+```bash
+# Recommended: Use make stop (automatically cleans up)
+make stop
+make
+
+# Manual cleanup (if needed)
+docker rm -f $(docker ps -aq --filter "name=recipehub") 2>/dev/null || true
+make
+
+# Alternative: Stop all containers and clean up
+docker-compose -f docker-compose.dev.yml down
+docker system prune -f
+make
+```
+
+**When to use this:**
+- Before switching git branches
+- After any Docker-related errors
+- When containers seem "stuck" or unresponsive
+- If you see network connection errors despite running `make`
 
 ### Getting Help
 

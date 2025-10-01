@@ -128,10 +128,16 @@ build_images() {
 stop_services() {
     print_status "Stopping all RecipeHub services..."
     
-    docker-compose down
-    docker-compose -f docker-compose.dev.yml down
+    # Stop and remove containers using docker-compose
+    docker-compose down 2>/dev/null || true
+    docker-compose -f docker-compose.dev.yml down 2>/dev/null || true
     
-    print_success "All services stopped!"
+    # Clean up any orphaned containers that might cause conflicts
+    print_status "Cleaning up any orphaned containers..."
+    docker rm -f $(docker ps -aq --filter "name=recipehub") 2>/dev/null || true
+    
+    print_success "All services stopped and cleaned up!"
+    print_status "You can now safely run 'make' or './start.sh dev' again"
 }
 
 # Function to clean everything

@@ -21,7 +21,6 @@ export function MyRecipesPage() {
   const { data: recipesResponse, isLoading } = useMyRecipes();
   const recipes = recipesResponse?.recipes || [];
 
-  // Mutation for deleting recipes
   const deleteRecipeMutation = useDeleteRecipe();
 
   const handleDelete = (recipeId: string, recipeName: string) => {
@@ -125,6 +124,13 @@ export function MyRecipesPage() {
                         </span>
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(recipe.difficulty)}`}>
                           {t(`recipes.difficulty.${recipe.difficulty}`)}
+                        </span>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          recipe.isPublished 
+                            ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' 
+                            : 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400'
+                        }`}>
+                          {recipe.isPublished ? 'Published' : 'Draft'}
                         </span>
                         <span>{new Date(recipe.createdAt).toLocaleDateString()}</span>
                       </div>

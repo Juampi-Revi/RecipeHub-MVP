@@ -101,6 +101,7 @@ export const createRecipeSchema = z.object({
     unit: z.string().max(20, 'Unit must be less than 20 characters').optional(),
     notes: z.string().max(100, 'Notes must be less than 100 characters').optional(),
   })).min(1, 'At least one ingredient is required'),
+  isPublished: z.boolean().optional(),
 });
 
 export const updateRecipeSchema = createRecipeSchema.partial().extend({

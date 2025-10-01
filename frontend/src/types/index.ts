@@ -75,6 +75,7 @@ export interface Recipe {
   flavorType: FlavorTypeEnum;
   mealType: MealTypeEnum;
   isLowCalorie: boolean;
+  isPublished: boolean;
   imageUrl?: string;
   estimatedCalories?: number;
   createdAt: string;

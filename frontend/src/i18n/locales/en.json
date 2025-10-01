@@ -186,7 +186,7 @@
       "signInButton": "Sign In",
       "noAccount": "Don't have an account?",
       "signUpLink": "Sign up here",
-      "success": "Successfully signed in! Welcome back."
+      "success": "Welcome back! You have successfully signed in to RecipeHub."
     },
     "signUp": {
       "title": "Create Account",
@@ -274,6 +274,13 @@
     "addRecipe": "Add Recipe",
     "signUp": "Sign Up",
     "myProfile": "My Profile"
+  },
+  "recipes": {
+    "additionalInfo": "Additional Information",
+    "noRecipes": {
+      "title": "No recipes found",
+      "description": "We couldn't find any recipes matching your criteria. Try adjusting your filters or search terms."
+    }
   },
   "pages": {
     "recipes": {

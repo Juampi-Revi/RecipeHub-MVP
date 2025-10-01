@@ -24,5 +24,9 @@ RUN npx prisma generate
 # Expose port
 EXPOSE 3001
 
-# Start the application in development mode with hot reload
-CMD ["npm", "run", "dev"]
+# Copy and make the start script executable
+COPY start-dev.sh ./
+RUN chmod +x start-dev.sh
+
+# Start the application with migrations and seed
+CMD ["./start-dev.sh"]

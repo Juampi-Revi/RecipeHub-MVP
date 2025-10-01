@@ -16,6 +16,10 @@ RecipeHub is a modern, full-stack recipe management platform that allows users t
 git clone git@github.com:Juampi-Revi/RecipeHub-MVP.git
 # Or if you don't have SSH configured:
 # git clone https://github.com/Juampi-Revi/RecipeHub-MVP.git
+
+# If the directory already exists, remove it first:
+# rm -rf RecipeHub-MVP && git clone git@github.com:Juampi-Revi/RecipeHub-MVP.git
+
 cd RecipeHub-MVP
 
 # 2. Start everything
@@ -28,6 +32,8 @@ make
 - **Backend API**: http://localhost:3001 (or next available port)
 
 > 🚀 **Smart Port Detection**: The application automatically detects and uses available ports, so you don't need to worry about port conflicts!
+
+> 🗄️ **Auto Database Setup**: Database migrations and sample data are automatically applied on startup - no manual setup required!
 
 ### Other Commands
 ```bash
@@ -713,6 +719,21 @@ docker system prune -a
 
 # Rebuild containers
 docker-compose down && docker-compose up --build
+```
+
+### Database Issues Troubleshooting
+
+If you encounter database-related errors, try these manual commands:
+
+```bash
+# Apply migrations manually
+docker exec recipehub-api-dev npx prisma migrate deploy
+
+# Seed the database manually
+docker exec recipehub-api-dev npx prisma db seed
+
+# Reset database completely (if needed)
+docker exec recipehub-api-dev npx prisma migrate reset --force
 ```
 
 ### Getting Help

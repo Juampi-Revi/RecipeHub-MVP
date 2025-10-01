@@ -38,8 +38,34 @@ const findAvailablePort = async (startPort: number = 3001): Promise<number> => {
 
 app.use(helmet());
 
+// Dynamic CORS configuration to support multiple frontend ports
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173', // Vite default
+  'http://localhost:3001', // Alternative
+  'http://localhost:4173', // Vite preview
+  process.env.FRONTEND_URL,
+].filter(Boolean); // Remove undefined values
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Check if the origin is in our allowed list
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    // Allow localhost with any port for development
+    if (process.env.NODE_ENV === 'development' && origin.startsWith('http://localhost:')) {
+      return callback(null, true);
+    }
+    
+    // Reject other origins
+    const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+    return callback(new Error(msg), false);
+  },
   credentials: true,
 }));
 
@@ -84,7 +110,7 @@ const startServer = async () => {
       // Write port to a file so frontend can read it
       const fs = require('fs');
       const path = require('path');
-      const portFile = path.join(__dirname, '../../.port');
+      const portFile = path.join(__dirname, '../../../.port'); // Write to project root
       fs.writeFileSync(portFile, PORT.toString());
       logger.info(`📝 Port written to ${portFile}`);
     });

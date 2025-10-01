@@ -1,8 +1,9 @@
 # Backend Development Dockerfile
-FROM node:18-alpine
+FROM node:20-alpine
 
-# Install curl for health checks
+# Install curl for health checks and OpenSSL 1.1 for Prisma
 RUN apk add --no-cache curl
+RUN apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/v3.16/main openssl1.1-compat-dev || apk add --no-cache openssl-dev
 
 # Set working directory
 WORKDIR /app
@@ -16,7 +17,8 @@ RUN npm install
 # Copy source code
 COPY . .
 
-# Generate Prisma client
+# Clean Prisma cache and generate client
+RUN rm -rf node_modules/.prisma
 RUN npx prisma generate
 
 # Expose port

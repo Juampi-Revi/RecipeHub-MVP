@@ -90,19 +90,19 @@ export function CreateRecipePage() {
           backendErrors.forEach((err) => {
             switch (err.field) {
               case 'instructions':
-                errorMessage += `• Las instrucciones deben tener al menos 10 caracteres\n`;
+                errorMessage += `• Instructions must be at least 10 characters long\n`;
                 break;
               case 'imageUrl':
-                errorMessage += `• La URL de la imagen no es válida\n`;
+                errorMessage += `• The image URL is not valid\n`;
                 break;
               case 'title':
-                errorMessage += `• El título es requerido y debe tener entre 3-100 caracteres\n`;
+                errorMessage += `• Title is required and must be between 3-100 characters\n`;
                 break;
               case 'categoryIds':
-                errorMessage += `• Debes seleccionar al menos una categoría\n`;
+                errorMessage += `• You must select at least one category\n`;
                 break;
               case 'ingredients':
-                errorMessage += `• Debes agregar al menos un ingrediente\n`;
+                errorMessage += `• You must add at least one ingredient\n`;
                 break;
               default:
                 errorMessage += `• ${err.field}: ${err.message}\n`;
@@ -111,10 +111,10 @@ export function CreateRecipePage() {
           
           showError(errorMessage);
         } else {
-          showError('Error de validación. Por favor verifica todos los campos.');
+          showError('Validation error. Please check all fields.');
         }
       } else {
-        showError('Error al crear la receta. Por favor verifica todos los campos e intenta nuevamente.');
+        showError('Error creating recipe. Please check all fields and try again.');
       }
     }
   };
@@ -123,10 +123,10 @@ export function CreateRecipePage() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-2">
-          Crear Nueva Receta
+          Create New Recipe
         </h1>
         <p className="text-gray-600 dark:text-gray-300">
-          Comparte tus recetas favoritas con la comunidad
+          Share your favorite recipes with the community
         </p>
       </div>
 
@@ -292,10 +292,10 @@ export function CreateRecipePage() {
             </div>
           </div>
 
-          {/* Categorías */}
+          {/* Categories */}
           <div>
             <label className="label">
-              Categorías
+              Categories
             </label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
               {categories.map((category) => (
@@ -342,21 +342,21 @@ export function CreateRecipePage() {
             )}
           </div>
 
-          {/* Botones */}
+          {/* Action Buttons */}
           <div className="flex justify-end space-x-4 pt-6">
             <button
               type="button"
               onClick={() => navigate('/recipes')}
               className="btn-outline"
             >
-              Cancelar
+              Cancel
             </button>
             <button
               type="submit"
               disabled={createRecipeMutation.isPending}
               className="btn-primary disabled:opacity-50"
             >
-              {createRecipeMutation.isPending ? 'Creando...' : 'Crear Receta'}
+              {createRecipeMutation.isPending ? 'Creating...' : 'Create Recipe'}
             </button>
           </div>
         </form>

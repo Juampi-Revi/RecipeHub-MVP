@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ChefHat, User, LogOut } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import LanguageSelector from '../atoms/LanguageSelector';
 import ThemeToggle from '../atoms/ThemeToggle';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -48,7 +47,6 @@ export function Header() {
           {/* Actions */}
           <div className="flex items-center space-x-2">
             <ThemeToggle />
-            <LanguageSelector />
             
             {isAuthenticated ? (
               <>

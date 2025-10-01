@@ -1,251 +1,758 @@
-# RecipeHub - Aplicación de Recetas
+# 🍳 RecipeHub - Complete Recipe Management Platform
 
-Una aplicación web moderna para gestionar y compartir recetas, construida con React, TypeScript, Node.js y Prisma.
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
+[![React](https://img.shields.io/badge/React-18+-blue.svg)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5+-blue.svg)](https://www.typescriptlang.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue.svg)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
 
-## 🚀 Características Principales
+RecipeHub is a modern, full-stack recipe management platform that allows users to create, share, and discover delicious recipes. Built with cutting-edge technologies and following best practices for scalability, security, and user experience.
 
-- **Frontend Moderno**: React 18 con TypeScript, Tailwind CSS y React Query
-- **Backend Robusto**: Node.js con Express, Prisma ORM y SQLite
-- **Autenticación**: Sistema completo de registro y login con JWT
-- **Gestión de Recetas**: CRUD completo con filtros, búsqueda y paginación
-- **Responsive Design**: Interfaz adaptable a todos los dispositivos
-- **Internacionalización**: Soporte para múltiples idiomas
-- **Tema Oscuro**: Modo claro/oscuro con persistencia
-- **Optimización de Performance**: Lazy loading, memoización y code splitting
+## 📋 Table of Contents
 
-## 📁 Estructura del Proyecto
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Quick Start with Docker](#-quick-start-with-docker)
+- [Manual Installation](#-manual-installation)
+- [Environment Configuration](#-environment-configuration)
+- [Database Setup](#-database-setup)
+- [Running the Application](#-running-the-application)
+- [API Documentation](#-api-documentation)
+- [Testing](#-testing)
+- [Deployment](#-deployment)
+- [Project Structure](#-project-structure)
+- [Contributing](#-contributing)
+- [License](#-license)
 
-```
-challenge_orderTob/
-├── frontend/                 # Aplicación React
-│   ├── src/
-│   │   ├── components/      # Componentes reutilizables
-│   │   │   ├── atoms/       # Componentes básicos
-│   │   │   ├── molecules/   # Componentes compuestos
-│   │   │   └── organisms/   # Componentes complejos
-│   │   ├── pages/          # Páginas de la aplicación
-│   │   ├── hooks/          # Custom hooks
-│   │   ├── contexts/       # Contextos de React
-│   │   ├── services/       # Servicios API
-│   │   ├── types/          # Definiciones TypeScript
-│   │   └── utils/          # Utilidades
-│   └── package.json
-├── backend/                 # API Node.js
-│   ├── src/
-│   │   ├── controllers/    # Controladores de rutas
-│   │   ├── services/       # Lógica de negocio
-│   │   ├── middleware/     # Middlewares
-│   │   ├── utils/          # Utilidades
-│   │   └── types/          # Tipos TypeScript
-│   ├── prisma/             # Esquema y migraciones
-│   └── package.json
-└── README.md
-```
+## ✨ Features
 
-## 🛠️ Tecnologías Utilizadas
+### 🔐 Authentication & User Management
+- **Secure Registration/Login** with JWT tokens
+- **Multi-device Session Management** with refresh tokens
+- **User Profile Management** with statistics
+- **Password Security** with bcrypt hashing
 
-### Frontend
-- **React 18** - Biblioteca de UI
-- **TypeScript** - Tipado estático
-- **Tailwind CSS** - Framework CSS
-- **React Query** - Gestión de estado del servidor
-- **React Router** - Enrutamiento
-- **React Hook Form** - Gestión de formularios
-- **i18next** - Internacionalización
-- **Vite** - Build tool
+### 🍳 Recipe Management
+- **Create & Edit Recipes** with rich content
+- **Recipe Categories** and ingredient management
+- **Difficulty Levels** and cooking time tracking
+- **Image Upload** support for recipes
+- **Draft/Published** status management
+- **Recipe Search** with advanced filtering
+
+### 🌟 Social Features
+- **Like/Unlike Recipes** with real-time counters
+- **Comments & Ratings** system
+- **Favorite Recipes** collection
+- **User Recipe Collections** and sharing
+- **Recipe Discovery** with personalized recommendations
+
+### 🎨 Modern UI/UX
+- **Responsive Design** for all devices
+- **Dark/Light Theme** support
+- **Intuitive Navigation** with breadcrumbs
+- **Real-time Updates** with optimistic UI
+- **Accessibility** compliant (WCAG 2.1)
+
+### 🔧 Technical Features
+- **RESTful API** with comprehensive endpoints
+- **Real-time Search** with debouncing
+- **Pagination** for large datasets
+- **Rate Limiting** and security headers
+- **Error Handling** with user-friendly messages
+- **Performance Optimization** with caching
+
+## 🛠 Tech Stack
 
 ### Backend
-- **Node.js** - Runtime de JavaScript
-- **Express** - Framework web
-- **Prisma** - ORM y gestión de base de datos
-- **SQLite** - Base de datos
-- **JWT** - Autenticación
-- **bcrypt** - Hashing de contraseñas
+- **Node.js 18+** - Runtime environment
+- **Express.js** - Web framework
+- **TypeScript** - Type safety
+- **Prisma ORM** - Database management
+- **PostgreSQL** - Primary database
+- **Redis** - Caching and sessions
+- **JWT** - Authentication
+- **bcrypt** - Password hashing
+- **Zod** - Input validation
 - **Winston** - Logging
-- **Helmet** - Seguridad
 
-## 🚀 Instalación y Configuración
+### Frontend
+- **React 18** - UI library
+- **TypeScript** - Type safety
+- **Vite** - Build tool and dev server
+- **React Router** - Client-side routing
+- **Zustand** - State management
+- **React Query** - Server state management
+- **Tailwind CSS** - Styling
+- **Headless UI** - Accessible components
+- **React Hook Form** - Form management
+- **Framer Motion** - Animations
 
-### Prerrequisitos
-- Node.js 18+ 
-- npm o yarn
+### DevOps & Tools
+- **Docker & Docker Compose** - Containerization
+- **ESLint & Prettier** - Code quality
+- **Husky** - Git hooks
+- **Jest & Testing Library** - Testing
+- **GitHub Actions** - CI/CD (ready)
 
-### 1. Clonar el repositorio
+## 🚀 Quick Start with Docker
+
+The fastest way to get RecipeHub running is using Docker. This method requires only Docker and Docker Compose installed on your system.
+
+### Prerequisites
+- [Docker](https://docs.docker.com/get-docker/) (20.10+)
+- [Docker Compose](https://docs.docker.com/compose/install/) (2.0+)
+
+### 1. Clone the Repository
 ```bash
 git clone <repository-url>
 cd challenge_orderTob
 ```
 
-### 2. Configurar el Backend
+### 2. Environment Setup
+```bash
+# Copy environment files
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+
+# The default values in .env.example work with Docker setup
+```
+
+### 3. Start the Application
+```bash
+# Make the start script executable
+chmod +x start.sh
+
+# Start in development mode
+./start.sh dev
+
+# Or start in production mode
+./start.sh prod
+```
+
+### 4. Access the Application
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:3001
+- **API Documentation**: http://localhost:3001/api/health
+
+### 5. Stop the Application
+```bash
+# Stop all services
+./start.sh stop
+
+# Stop and clean all data (including database)
+./start.sh clean
+```
+
+## 🔧 Manual Installation
+
+If you prefer to run the application without Docker, follow these steps:
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (18.0+)
+- [npm](https://www.npmjs.com/) (9.0+)
+- [PostgreSQL](https://www.postgresql.org/) (15.0+)
+- [Redis](https://redis.io/) (7.0+) - Optional but recommended
+
+### 1. Clone and Setup
+```bash
+git clone <repository-url>
+cd challenge_orderTob
+```
+
+### 2. Backend Setup
 ```bash
 cd backend
+
+# Install dependencies
 npm install
 
-# Crear archivo de configuración
+# Copy environment file
 cp .env.example .env
 
-# Ejecutar migraciones
+# Edit .env file with your database credentials
+nano .env
+```
+
+### 3. Database Setup
+```bash
+# Create PostgreSQL database
+createdb recipehub_dev
+
+# Generate Prisma client
+npx prisma generate
+
+# Run database migrations
 npx prisma migrate dev
 
-# Poblar la base de datos
+# Seed the database (optional)
 npx prisma db seed
-
-# Iniciar el servidor
-npm run dev
 ```
 
-### 3. Configurar el Frontend
+### 4. Frontend Setup
 ```bash
-cd frontend
+cd ../frontend
+
+# Install dependencies
 npm install
 
-# Iniciar la aplicación
+# Copy environment file
+cp .env.example .env
+
+# Edit .env file if needed
+nano .env
+```
+
+### 5. Start Development Servers
+```bash
+# Terminal 1: Start backend
+cd backend
+npm run dev
+
+# Terminal 2: Start frontend
+cd frontend
 npm run dev
 ```
 
-### 4. Acceder a la aplicación
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:3001
-- Health Check: http://localhost:3001/api/health
+### 6. Access the Application
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:3001
 
-## 🔧 Variables de Entorno
+## ⚙️ Environment Configuration
 
-### Backend (.env)
+### Backend Environment Variables
+
+Create `backend/.env` file:
+
 ```env
-# Server
+# Database Configuration
+DATABASE_URL="postgresql://username:password@localhost:5432/recipehub_dev"
+
+# JWT Configuration
+JWT_SECRET="your-super-secret-jwt-key-change-this-in-production"
+JWT_REFRESH_SECRET="your-super-secret-refresh-key-change-this-in-production"
+JWT_EXPIRES_IN="15m"
+JWT_REFRESH_EXPIRES_IN="7d"
+
+# Redis Configuration (Optional)
+REDIS_URL="redis://localhost:6379"
+
+# Server Configuration
 PORT=3001
-NODE_ENV=development
+NODE_ENV="development"
 
-# Database
-DATABASE_URL="file:./dev.db"
-
-# JWT
-JWT_SECRET=your-super-secret-jwt-key-here
-JWT_EXPIRES_IN=7d
-
-# CORS
-CORS_ORIGIN=http://localhost:3000
+# CORS Configuration
+FRONTEND_URL="http://localhost:5173"
 
 # Rate Limiting
 RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX_REQUESTS=100
 
-# Logging
-LOG_LEVEL=info
+# File Upload (if implemented)
+MAX_FILE_SIZE=5242880
+UPLOAD_PATH="./uploads"
+
+# Email Configuration (for future features)
+SMTP_HOST="smtp.gmail.com"
+SMTP_PORT=587
+SMTP_USER="your-email@gmail.com"
+SMTP_PASS="your-app-password"
 ```
 
-## 📚 API Endpoints
+### Frontend Environment Variables
 
-### Autenticación
-- `POST /api/auth/register` - Registro de usuario
-- `POST /api/auth/login` - Inicio de sesión
-- `GET /api/auth/me` - Perfil del usuario
+Create `frontend/.env` file:
 
-### Recetas
-- `GET /api/recipes` - Listar recetas (con filtros y paginación)
-- `GET /api/recipes/:id` - Obtener receta específica
-- `POST /api/recipes` - Crear nueva receta
-- `PUT /api/recipes/:id` - Actualizar receta
-- `DELETE /api/recipes/:id` - Eliminar receta
+```env
+# API Configuration
+VITE_API_URL="http://localhost:3001/api"
 
-### Categorías
-- `GET /api/categories` - Listar categorías
+# App Configuration
+VITE_APP_NAME="RecipeHub"
+VITE_APP_VERSION="1.0.0"
 
-### Usuarios
-- `GET /api/users/profile` - Perfil del usuario
-- `PUT /api/users/profile` - Actualizar perfil
+# Feature Flags
+VITE_ENABLE_ANALYTICS=false
+VITE_ENABLE_SENTRY=false
 
-## 🎨 Características de UI/UX
-
-### Componentes Optimizados
-- **Lazy Loading**: Carga diferida de páginas
-- **React.memo**: Optimización de re-renders
-- **useMemo/useCallback**: Memoización de cálculos costosos
-- **Error Boundaries**: Manejo robusto de errores
-
-### Sistema de Notificaciones
-- Toast notifications para feedback del usuario
-- Manejo centralizado de errores
-- Estados de carga consistentes
-
-### Responsive Design
-- Mobile-first approach
-- Breakpoints optimizados
-- Componentes adaptativos
-
-## 🔒 Seguridad
-
-- Autenticación JWT
-- Validación de datos en frontend y backend
-- Rate limiting
-- Sanitización de inputs
-- Headers de seguridad con Helmet
-- Hashing seguro de contraseñas
-
-## 🧪 Testing y Desarrollo
-
-### Scripts Disponibles
-
-#### Frontend
-```bash
-npm run dev          # Servidor de desarrollo
-npm run build        # Build de producción
-npm run preview      # Preview del build
-npm run lint         # Linting
+# Upload Configuration
+VITE_MAX_FILE_SIZE=5242880
+VITE_ALLOWED_FILE_TYPES="image/jpeg,image/png,image/webp"
 ```
 
-#### Backend
+### Production Environment
+
+For production deployment, ensure you:
+
+1. **Change all secrets** in environment variables
+2. **Use strong passwords** for database and Redis
+3. **Enable HTTPS** for both frontend and backend
+4. **Configure proper CORS** origins
+5. **Set up monitoring** and logging
+6. **Configure backup** strategies
+
+## 🗄️ Database Setup
+
+### Using Prisma (Recommended)
+
 ```bash
-npm run dev          # Servidor de desarrollo
-npm run build        # Compilar TypeScript
-npm run start        # Servidor de producción
-npm run prisma:studio # Interfaz de base de datos
+cd backend
+
+# Generate Prisma client
+npx prisma generate
+
+# Create and apply migrations
+npx prisma migrate dev --name init
+
+# View database in Prisma Studio
+npx prisma studio
+```
+
+### Manual Database Setup
+
+If you prefer to set up the database manually:
+
+```sql
+-- Create database
+CREATE DATABASE recipehub_dev;
+
+-- Create user (optional)
+CREATE USER recipehub_user WITH PASSWORD 'your_password';
+GRANT ALL PRIVILEGES ON DATABASE recipehub_dev TO recipehub_user;
+```
+
+### Database Seeding
+
+```bash
+# Seed with sample data
+npx prisma db seed
+
+# Reset database and seed
+npx prisma migrate reset
+```
+
+## 🏃‍♂️ Running the Application
+
+### Development Mode
+
+```bash
+# Using Docker (Recommended)
+./start.sh dev
+
+# Manual setup
+# Terminal 1: Backend
+cd backend && npm run dev
+
+# Terminal 2: Frontend  
+cd frontend && npm run dev
+```
+
+### Production Mode
+
+```bash
+# Using Docker
+./start.sh prod
+
+# Manual setup
+# Build frontend
+cd frontend && npm run build
+
+# Start backend in production
+cd backend && npm run build && npm start
+```
+
+### Available Scripts
+
+#### Backend Scripts
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm start           # Start production server
+npm run test        # Run tests
+npm run test:watch  # Run tests in watch mode
+npm run lint        # Run ESLint
+npm run format      # Format code with Prettier
+npm run db:migrate  # Run database migrations
+npm run db:seed     # Seed database
+npm run db:studio   # Open Prisma Studio
+```
+
+#### Frontend Scripts
+```bash
+npm run dev         # Start development server
+npm run build       # Build for production
+npm run preview     # Preview production build
+npm run test        # Run tests
+npm run test:ui     # Run tests with UI
+npm run lint        # Run ESLint
+npm run format      # Format code with Prettier
+npm run type-check  # TypeScript type checking
+```
+
+## 📚 API Documentation
+
+### Interactive Documentation
+- **API Specification**: [API_SPECIFICATION.md](./API_SPECIFICATION.md)
+- **Health Check**: http://localhost:3001/api/health
+
+### Quick API Overview
+
+#### Authentication Endpoints
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - Login user
+- `POST /api/auth/refresh` - Refresh access token
+- `POST /api/auth/logout` - Logout user
+- `GET /api/auth/profile` - Get user profile
+
+#### Recipe Endpoints
+- `GET /api/recipes` - Get all recipes (with filters)
+- `GET /api/recipes/search` - Search recipes
+- `GET /api/recipes/:id` - Get recipe by ID
+- `POST /api/recipes` - Create new recipe
+- `PUT /api/recipes/:id` - Update recipe
+- `DELETE /api/recipes/:id` - Delete recipe
+- `POST /api/recipes/:id/like` - Toggle like recipe
+
+#### Other Endpoints
+- `GET /api/categories` - Get all categories
+- `GET /api/ingredients` - Get all ingredients
+- `GET /api/comments` - Get comments for recipe
+- `POST /api/comments` - Create comment
+
+### Testing API with cURL
+
+```bash
+# Register user
+curl -X POST http://localhost:3001/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"password123","name":"Test User"}'
+
+# Login
+curl -X POST http://localhost:3001/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"password123"}'
+
+# Get recipes
+curl -X GET "http://localhost:3001/api/recipes?page=1&limit=10"
+```
+
+## 🧪 Testing
+
+### Running Tests
+
+```bash
+# Backend tests
+cd backend
+npm run test
+
+# Frontend tests
+cd frontend
+npm run test
+
+# Run all tests with coverage
+npm run test:coverage
+```
+
+### Test Structure
+
+```
+backend/
+├── src/
+│   ├── __tests__/          # Unit tests
+│   ├── routes/__tests__/   # Route tests
+│   └── services/__tests__/ # Service tests
+└── tests/
+    ├── integration/        # Integration tests
+    └── e2e/               # End-to-end tests
+
+frontend/
+├── src/
+│   ├── components/__tests__/  # Component tests
+│   ├── hooks/__tests__/       # Hook tests
+│   └── utils/__tests__/       # Utility tests
+└── e2e/                      # Playwright E2E tests
+```
+
+### Writing Tests
+
+#### Backend Test Example
+```typescript
+// backend/src/routes/__tests__/auth.test.ts
+import request from 'supertest';
+import app from '../../app';
+
+describe('Auth Routes', () => {
+  it('should register a new user', async () => {
+    const response = await request(app)
+      .post('/api/auth/register')
+      .send({
+        email: 'test@example.com',
+        password: 'password123',
+        name: 'Test User'
+      });
+    
+    expect(response.status).toBe(201);
+    expect(response.body.success).toBe(true);
+  });
+});
+```
+
+#### Frontend Test Example
+```typescript
+// frontend/src/components/__tests__/RecipeCard.test.tsx
+import { render, screen } from '@testing-library/react';
+import { RecipeCard } from '../RecipeCard';
+
+describe('RecipeCard', () => {
+  it('renders recipe information', () => {
+    const recipe = {
+      id: '1',
+      title: 'Test Recipe',
+      description: 'Test description'
+    };
+    
+    render(<RecipeCard recipe={recipe} />);
+    
+    expect(screen.getByText('Test Recipe')).toBeInTheDocument();
+    expect(screen.getByText('Test description')).toBeInTheDocument();
+  });
+});
 ```
 
 ## 🚀 Deployment
 
-### Frontend (Vercel/Netlify)
-1. Build del proyecto: `npm run build`
-2. Deploy de la carpeta `dist/`
+### Docker Deployment (Recommended)
 
-### Backend (Railway/Heroku)
-1. Configurar variables de entorno
-2. Ejecutar migraciones: `npx prisma migrate deploy`
-3. Deploy del código
+```bash
+# Build production images
+docker-compose -f docker-compose.yml build
 
-## 📈 Performance
+# Deploy to production
+docker-compose -f docker-compose.yml up -d
 
-### Optimizaciones Implementadas
-- **Code Splitting**: Lazy loading de rutas
-- **Memoización**: React.memo, useMemo, useCallback
-- **Caching**: React Query con stale-while-revalidate
-- **Bundle Optimization**: Tree shaking y minificación
-- **Image Optimization**: Lazy loading de imágenes
+# Check logs
+docker-compose logs -f
+```
 
-### Métricas
-- First Contentful Paint: < 1.5s
-- Largest Contentful Paint: < 2.5s
-- Time to Interactive: < 3.5s
+### Manual Deployment
 
-## 🤝 Contribución
+#### Backend Deployment
+```bash
+# Build the application
+npm run build
 
-1. Fork el proyecto
-2. Crear una rama feature (`git checkout -b feature/AmazingFeature`)
-3. Commit los cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abrir un Pull Request
+# Start with PM2 (recommended)
+npm install -g pm2
+pm2 start dist/index.js --name recipehub-api
 
-## 📄 Licencia
+# Or start with node
+node dist/index.js
+```
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+#### Frontend Deployment
+```bash
+# Build for production
+npm run build
 
-## 👥 Autores
+# Serve with nginx, apache, or any static file server
+# The build files will be in the 'dist' directory
+```
 
-- **Tu Nombre** - *Desarrollo inicial* - [TuGitHub](https://github.com/tuusuario)
+### Environment-Specific Configurations
 
-## 🙏 Agradecimientos
+#### Staging Environment
+```bash
+# Use staging environment file
+cp .env.staging .env
 
-- React Team por la excelente documentación
-- Prisma por el ORM intuitivo
-- Tailwind CSS por el framework de estilos
-- Toda la comunidad open source
+# Deploy with staging configuration
+docker-compose -f docker-compose.staging.yml up -d
+```
+
+#### Production Environment
+```bash
+# Use production environment file
+cp .env.production .env
+
+# Deploy with production configuration
+docker-compose -f docker-compose.yml up -d
+```
+
+## 📁 Project Structure
+
+```
+challenge_orderTob/
+├── backend/                    # Backend API
+│   ├── src/
+│   │   ├── controllers/        # Route controllers
+│   │   ├── middleware/         # Express middleware
+│   │   ├── models/            # Database models (Prisma)
+│   │   ├── routes/            # API routes
+│   │   ├── services/          # Business logic
+│   │   ├── utils/             # Utility functions
+│   │   ├── types/             # TypeScript types
+│   │   └── app.ts             # Express app setup
+│   ├── prisma/                # Database schema and migrations
+│   ├── tests/                 # Test files
+│   ├── Dockerfile             # Backend Docker configuration
+│   └── package.json
+├── frontend/                   # Frontend React app
+│   ├── src/
+│   │   ├── components/        # React components
+│   │   │   ├── atoms/         # Atomic design - atoms
+│   │   │   ├── molecules/     # Atomic design - molecules
+│   │   │   ├── organisms/     # Atomic design - organisms
+│   │   │   └── templates/     # Atomic design - templates
+│   │   ├── pages/             # Page components
+│   │   ├── hooks/             # Custom React hooks
+│   │   ├── services/          # API services
+│   │   ├── store/             # State management (Zustand)
+│   │   ├── utils/             # Utility functions
+│   │   ├── types/             # TypeScript types
+│   │   └── App.tsx            # Main App component
+│   ├── public/                # Static assets
+│   ├── Dockerfile             # Frontend Docker configuration
+│   └── package.json
+├── docker-compose.yml          # Production Docker setup
+├── docker-compose.dev.yml      # Development Docker setup
+├── start.sh                   # Convenience script for Docker
+├── API_SPECIFICATION.md       # Complete API documentation
+└── README.md                  # This file
+```
+
+### Architecture Overview
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Frontend      │    │   Backend       │    │   Database      │
+│   (React)       │◄──►│   (Express)     │◄──►│   (PostgreSQL)  │
+│   Port: 3000    │    │   Port: 3001    │    │   Port: 5432    │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                                │
+                                ▼
+                       ┌─────────────────┐
+                       │     Redis       │
+                       │   (Caching)     │
+                       │   Port: 6379    │
+                       └─────────────────┘
+```
+
+## 🤝 Contributing
+
+We welcome contributions! Please follow these guidelines:
+
+### Development Workflow
+
+1. **Fork the repository**
+2. **Create a feature branch**
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+3. **Make your changes**
+4. **Run tests**
+   ```bash
+   npm run test
+   ```
+5. **Commit your changes**
+   ```bash
+   git commit -m 'Add amazing feature'
+   ```
+6. **Push to the branch**
+   ```bash
+   git push origin feature/amazing-feature
+   ```
+7. **Open a Pull Request**
+
+### Code Standards
+
+- **TypeScript** for type safety
+- **ESLint + Prettier** for code formatting
+- **Conventional Commits** for commit messages
+- **Jest** for testing
+- **Clean Architecture** principles
+
+### Commit Message Format
+
+```
+type(scope): description
+
+[optional body]
+
+[optional footer]
+```
+
+Examples:
+- `feat(auth): add JWT refresh token functionality`
+- `fix(recipes): resolve search filter bug`
+- `docs(api): update endpoint documentation`
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+### Common Issues
+
+#### Database Connection Issues
+```bash
+# Check if PostgreSQL is running
+pg_isready -h localhost -p 5432
+
+# Reset database
+npx prisma migrate reset
+```
+
+#### Port Already in Use
+```bash
+# Find process using port 3001
+lsof -ti:3001
+
+# Kill the process
+kill -9 <PID>
+```
+
+#### Docker Issues
+```bash
+# Clean Docker system
+docker system prune -a
+
+# Rebuild containers
+docker-compose down && docker-compose up --build
+```
+
+### Getting Help
+
+- **Documentation**: Check this README and API_SPECIFICATION.md
+- **Issues**: Create an issue on GitHub
+- **Discussions**: Use GitHub Discussions for questions
+
+### Performance Tips
+
+1. **Use Redis** for caching in production
+2. **Enable gzip** compression
+3. **Optimize images** before uploading
+4. **Use CDN** for static assets
+5. **Monitor** application performance
+
+---
+
+## 🎉 Quick Start Summary
+
+For the impatient developer:
+
+```bash
+# Clone and start with Docker
+git clone <repo-url>
+cd challenge_orderTob
+chmod +x start.sh
+./start.sh dev
+
+# Access at http://localhost:3000
+```
+
+That's it! You now have a fully functional recipe management platform running locally.
+
+---
+
+**Built with ❤️ by the RecipeHub Team**

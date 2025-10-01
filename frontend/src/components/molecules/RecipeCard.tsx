@@ -104,9 +104,9 @@ export const RecipeCard = memo(function RecipeCard({ recipe, onClick, className 
 
         {/* Recipe Meta */}
         <div className="flex items-center justify-between mb-3">
-          {/* Difficulty Badge */}
-          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${difficultyColors[recipe.difficulty.toLowerCase() as keyof typeof difficultyColors]}`}>
-            {t(`recipes.difficulty.${recipe.difficulty}`)}
+          {/* Complexity Badge */}
+          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${difficultyColors[recipe.complexity.toLowerCase() as keyof typeof difficultyColors]}`}>
+            {t(`recipes.complexity.${recipe.complexity}`)}
           </span>
 
           {/* Prep Time */}

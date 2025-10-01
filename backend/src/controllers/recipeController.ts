@@ -53,34 +53,41 @@ export const createRecipe = asyncHandler(async (req: AuthenticatedRequest, res: 
 
 export const getRecipes = asyncHandler(async (req: Request, res: Response) => {
   try {
-    const pagination = paginationSchema.parse(req.query);
+    // Parse pagination with defaults
+    const pagination = {
+      page: req.query.page ? parseInt(req.query.page as string) : 1,
+      limit: req.query.limit ? Math.min(parseInt(req.query.limit as string), 50) : 20
+    };
+    
     const sort = recipeSortSchema.parse(req.query);
     
+    // Build filters object with only the specific filters we need
     const filters: any = {};
     
-    if (req.query.search) filters.search = req.query.search;
-    if (req.query.categoryIds) {
-      filters.categoryIds = Array.isArray(req.query.categoryIds) 
-        ? req.query.categoryIds 
-        : [req.query.categoryIds];
+    // Search by recipe name/title
+    if (req.query.search) {
+      filters.search = req.query.search;
     }
-    if (req.query.difficulty) filters.difficulty = req.query.difficulty;
-    // New categorization filters
-    if (req.query.complexity) filters.complexity = req.query.complexity;
-    if (req.query.flavorType) filters.flavorType = req.query.flavorType;
-    if (req.query.mealType) filters.mealType = req.query.mealType;
-    if (req.query.isLowCalorie !== undefined) filters.isLowCalorie = req.query.isLowCalorie === 'true';
-    if (req.query.maxPrepTime) filters.maxPrepTime = parseInt(req.query.maxPrepTime as string);
-    if (req.query.maxCookTime) filters.maxCookTime = parseInt(req.query.maxCookTime as string);
-    if (req.query.maxCalories) filters.maxCalories = parseInt(req.query.maxCalories as string);
-    if (req.query.minRating) filters.minRating = parseFloat(req.query.minRating as string);
-    if (req.query.authorId) filters.authorId = req.query.authorId;
-    if (req.query.isPublished !== undefined) filters.isPublished = req.query.isPublished === 'true';
-    if (req.query.hasIngredients) {
-      filters.hasIngredients = Array.isArray(req.query.hasIngredients) 
-        ? req.query.hasIngredients 
-        : [req.query.hasIngredients];
+    
+    // Filter by category
+    if (req.query.category) {
+      filters.categoryIds = Array.isArray(req.query.category) 
+        ? req.query.category 
+        : [req.query.category];
     }
+    
+    // Filter by complexity
+    if (req.query.complexity) {
+      filters.complexity = req.query.complexity;
+    }
+    
+    // Filter by meal type
+    if (req.query.mealType) {
+      filters.mealType = req.query.mealType;
+    }
+    
+    // Always show only published recipes for public endpoint
+    filters.isPublished = true;
 
     const validatedFilters = recipeFiltersSchema.parse(filters);
     

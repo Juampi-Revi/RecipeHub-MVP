@@ -11,6 +11,11 @@ export interface User {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  statistics?: {
+    recipesCreated: number;
+    recipesFavorited: number;
+    commentsLeft: number;
+  };
 }
 
 export interface CreateUserRequest {
@@ -31,22 +36,14 @@ export interface AuthResponse {
   token: string;
 }
 
-// Recipe types
-export const Difficulty = {
-  EASY: 'easy',
-  MEDIUM: 'medium',
-  HARD: 'hard',
-} as const;
-
-export type DifficultyType = typeof Difficulty[keyof typeof Difficulty];
-
-export const Complexity = {
+// Recipe types - Consolidated enums
+export const RecipeLevel = {
   EASY: 'EASY',
   MEDIUM: 'MEDIUM',
   HARD: 'HARD',
 } as const;
 
-export type ComplexityType = typeof Complexity[keyof typeof Complexity];
+export type RecipeLevelType = typeof RecipeLevel[keyof typeof RecipeLevel];
 
 export const FlavorType = {
   SWEET: 'SWEET',
@@ -64,42 +61,51 @@ export const MealType = {
 
 export type MealTypeEnum = typeof MealType[keyof typeof MealType];
 
+// Simplified Recipe interface
 export interface Recipe {
   id: string;
   title: string;
   description: string;
   instructions: string;
-  prepTime: number; // in minutes
-  cookTime: number; // in minutes
+  prepTime: number;
+  cookTime: number;
   servings: number;
-  difficulty: DifficultyType;
-  imageUrl?: string;
-  estimatedCalories?: number;
-  
-  // New categorization fields
-  complexity: ComplexityType;
+  difficulty: RecipeLevelType;
+  complexity: RecipeLevelType;
   flavorType: FlavorTypeEnum;
   mealType: MealTypeEnum;
   isLowCalorie: boolean;
-  
+  imageUrl?: string;
+  estimatedCalories?: number;
   createdAt: string;
   updatedAt: string;
   authorId: string;
   author: User;
-  categories: Array<{
-    id: string;
-    category: {
-      id: string;
-      name: string;
-      type: string;
-      color?: string;
-    };
-  }>;
+  categories: RecipeCategory[];
   ingredients: RecipeIngredient[];
   steps?: RecipeStep[];
   ratings: Rating[];
   averageRating?: number;
   totalRatings?: number;
+  _count?: RecipeStats;
+  isLikedByUser?: boolean;
+}
+
+// Simplified nested types
+export interface RecipeCategory {
+  id: string;
+  category: {
+    id: string;
+    name: string;
+    type: string;
+    color?: string;
+  };
+}
+
+export interface RecipeStats {
+  likes: number;
+  comments: number;
+  ratings: number;
 }
 
 export interface CreateRecipeRequest {
@@ -109,12 +115,14 @@ export interface CreateRecipeRequest {
   prepTime: number;
   cookTime: number;
   servings: number;
-  difficulty: DifficultyType;
-  estimatedCalories?: number;
-  complexity: ComplexityType;
+  difficulty: RecipeLevelType;
+  complexity: RecipeLevelType;
   flavorType: FlavorTypeEnum;
   mealType: MealTypeEnum;
   isLowCalorie: boolean;
+  imageUrl?: string;
+  estimatedCalories?: number;
+  isPublished?: boolean;
   categoryIds: string[];
   ingredients: CreateRecipeIngredientRequest[];
 }
@@ -166,7 +174,7 @@ export interface RecipeStep {
   stepNumber: number;
   instruction: string;
   imageUrl?: string;
-  duration?: number; // in minutes
+  duration?: number;
   recipeId: string;
 }
 
@@ -209,14 +217,15 @@ export interface PaginatedResponse<T> {
   };
 }
 
-// Query parameters
+// Simplified filters
 export interface RecipeFilters {
   category?: string;
-  difficulty?: DifficultyType;
-  complexity?: ComplexityType;
+  difficulty?: RecipeLevelType;
+  complexity?: RecipeLevelType;
   flavorType?: FlavorTypeEnum;
   mealType?: MealTypeEnum;
   isLowCalorie?: boolean;
+  isPublished?: boolean;
   prepTimeMax?: number;
   cookTimeMax?: number;
   caloriesMax?: number;
@@ -235,3 +244,9 @@ export interface SortParams {
 }
 
 export type RecipeQueryParams = RecipeFilters & PaginationParams & SortParams;
+
+// Legacy type aliases for backward compatibility
+export type DifficultyType = RecipeLevelType;
+export type ComplexityType = RecipeLevelType;
+export const Difficulty = RecipeLevel;
+export const Complexity = RecipeLevel;

@@ -1,120 +1,37 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import {
-  hashPassword,
-  verifyPassword,
-  generateTokenPair,
-  verifyRefreshToken,
-  refreshAccessToken,
   registerSchema,
   loginSchema,
   refreshTokenSchema,
-  ValidationError,
-  AuthenticationError,
-  ConflictError,
+  logoutSchema,
   sendSuccessResponse,
-  sendErrorResponse,
   asyncHandler,
 } from '../utils';
-
-const prisma = new PrismaClient();
-
-interface RefreshTokenStore {
-  [userId: string]: string;
-}
-
-const refreshTokens: RefreshTokenStore = {};
+import authService from '../services/authService';
+import { AuthenticatedRequest } from '../middleware/auth';
 
 export const register = asyncHandler(async (req: Request, res: Response): Promise<void> => {
   const validatedData = registerSchema.parse(req.body);
-  const { name, email, password } = validatedData;
-
-  const existingUser = await prisma.user.findUnique({
-    where: { email },
-  });
-
-  if (existingUser) {
-    throw new ConflictError('User with this email already exists');
-  }
-
-  const hashedPassword = await hashPassword(password);
-
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-      role: 'USER',
-    },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      createdAt: true,
-    },
-  });
-
-  const payload = {
-    userId: user.id,
-    email: user.email,
-    role: user.role,
-  };
-  
-  const { accessToken, refreshToken } = generateTokenPair(payload);
-  refreshTokens[user.id] = refreshToken;
+  const result = await authService.register(validatedData);
 
   sendSuccessResponse(res, {
-    user,
+    user: result.user,
     tokens: {
-      accessToken,
-      refreshToken,
+      accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
     },
   }, 'User registered successfully', 201);
 });
 
 export const login = asyncHandler(async (req: Request, res: Response): Promise<void> => {
   const validatedData = loginSchema.parse(req.body);
-  const { email, password } = validatedData;
-
-  const user = await prisma.user.findUnique({
-    where: { email },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      password: true,
-      role: true,
-      createdAt: true,
-    },
-  });
-
-  if (!user) {
-    throw new AuthenticationError('Invalid email or password');
-  }
-
-  const isPasswordValid = await verifyPassword(password, user.password);
-
-  if (!isPasswordValid) {
-    throw new AuthenticationError('Invalid email or password');
-  }
-
-  const payload = {
-    userId: user.id,
-    email: user.email,
-    role: user.role,
-  };
-  
-  const { accessToken, refreshToken } = generateTokenPair(payload);
-  refreshTokens[user.id] = refreshToken;
-
-  const { password: _, ...userWithoutPassword } = user;
+  const result = await authService.login(validatedData);
 
   sendSuccessResponse(res, {
-    user: userWithoutPassword,
+    user: result.user,
     tokens: {
-      accessToken,
-      refreshToken,
+      accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
     },
   }, 'Login successful');
 });
@@ -122,125 +39,78 @@ export const login = asyncHandler(async (req: Request, res: Response): Promise<v
 export const refresh = asyncHandler(async (req: Request, res: Response): Promise<void> => {
   const validatedData = refreshTokenSchema.parse(req.body);
   const { refreshToken } = validatedData;
+  
+  const result = await authService.refreshToken(refreshToken);
 
-  try {
-    const decoded = verifyRefreshToken(refreshToken);
-    const userId = decoded.userId;
-
-    if (!refreshTokens[userId] || refreshTokens[userId] !== refreshToken) {
-      throw new AuthenticationError('Invalid refresh token');
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-      },
-    });
-
-    if (!user) {
-      throw new AuthenticationError('User not found');
-    }
-
-    const payload = {
-      userId: user.id,
-      email: user.email,
-      role: user.role,
-    };
-    
-    const newAccessToken = refreshAccessToken(refreshToken);
-    const { accessToken, refreshToken: newRefreshToken } = generateTokenPair(payload);
-    
-    refreshTokens[userId] = newRefreshToken;
-
-    sendSuccessResponse(res, {
-      message: 'Token refreshed successfully',
-      data: {
-        tokens: {
-          accessToken,
-          refreshToken: newRefreshToken,
-        },
-      },
-    });
-  } catch (error) {
-    delete refreshTokens[req.body.userId];
-    throw new AuthenticationError('Invalid or expired refresh token');
-  }
+  sendSuccessResponse(res, {
+    tokens: result,
+  }, 'Token refreshed successfully');
 });
 
 export const logout = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  const validatedData = refreshTokenSchema.parse(req.body);
+  const validatedData = logoutSchema.parse(req.body);
   const { refreshToken } = validatedData;
 
-  try {
-    const decoded = verifyRefreshToken(refreshToken);
-    const userId = decoded.userId;
-    
-    delete refreshTokens[userId];
-
-    sendSuccessResponse(res, {
-      message: 'Logout successful',
-      data: null,
-    });
-  } catch (error) {
-    sendSuccessResponse(res, {
-      message: 'Logout successful',
-      data: null,
-    });
+  if (refreshToken) {
+    await authService.logout(refreshToken);
   }
+
+  sendSuccessResponse(res, null, 'Logout successful');
 });
 
-export const logoutAll = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  const validatedData = refreshTokenSchema.parse(req.body);
-  const { refreshToken } = validatedData;
-
-  try {
-    const decoded = verifyRefreshToken(refreshToken);
-    const userId = decoded.userId;
-    
-    Object.keys(refreshTokens).forEach(key => {
-      if (key === userId) {
-        delete refreshTokens[key];
-      }
-    });
-
-    sendSuccessResponse(res, {
-      message: 'Logged out from all devices successfully',
-      data: null,
-    });
-  } catch (error) {
-    throw new AuthenticationError('Invalid refresh token');
-  }
-});
-
-export const getProfile = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  const userId = (req as any).user?.id;
-
+export const logoutAll = asyncHandler(async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  const userId = req.user?.id;
+  
   if (!userId) {
-    throw new AuthenticationError('User not authenticated');
+    res.status(401).json({
+      success: false,
+      error: {
+        message: 'Unauthorized',
+        statusCode: 401,
+      },
+    });
+    return;
   }
 
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  });
+  await authService.logoutAll(userId);
 
-  if (!user) {
-    throw new AuthenticationError('User not found');
+  sendSuccessResponse(res, null, 'All sessions logged out successfully');
+});
+
+export const getProfile = asyncHandler(async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  const userId = req.user?.id;
+  
+  if (!userId) {
+    res.status(401).json({
+      success: false,
+      error: {
+        message: 'Unauthorized',
+        statusCode: 401,
+      },
+    });
+    return;
   }
 
-  sendSuccessResponse(res, {
-    message: 'Profile retrieved successfully',
-    data: { user },
-  });
+  const profile = await authService.getProfile(userId);
+
+  sendSuccessResponse(res, { profile }, 'Profile retrieved successfully');
+});
+
+export const getStatistics = asyncHandler(async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  const userId = req.user?.id;
+  
+  if (!userId) {
+    res.status(401).json({
+      success: false,
+      error: {
+        message: 'Unauthorized',
+        statusCode: 401,
+      },
+    });
+    return;
+  }
+
+  const statistics = await authService.getStatistics(userId);
+
+  sendSuccessResponse(res, { statistics }, 'Statistics retrieved successfully');
 });

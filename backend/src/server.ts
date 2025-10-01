@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
+import net from 'net';
 import { createLogger } from './config/logger';
 import { errorHandler } from './middleware/errorHandler';
 import { notFoundHandler } from './middleware/notFoundHandler';
@@ -12,7 +13,28 @@ dotenv.config();
 
 const app = express();
 const logger = createLogger();
-const PORT = process.env.PORT || 3001;
+
+// Function to check if a port is available
+const isPortAvailable = (port: number): Promise<boolean> => {
+  return new Promise((resolve) => {
+    const server = net.createServer();
+    server.listen(port, () => {
+      server.once('close', () => resolve(true));
+      server.close();
+    });
+    server.on('error', () => resolve(false));
+  });
+};
+
+// Function to find an available port
+const findAvailablePort = async (startPort: number = 3001): Promise<number> => {
+  for (let port = startPort; port <= startPort + 10; port++) {
+    if (await isPortAvailable(port)) {
+      return port;
+    }
+  }
+  throw new Error(`No available ports found starting from ${startPort}`);
+};
 
 app.use(helmet());
 
@@ -47,26 +69,48 @@ app.use(notFoundHandler);
 
 app.use(errorHandler);
 
-const server = app.listen(PORT, () => {
-  logger.info(`🚀 RecipeHub API server running on port ${PORT}`);
-  logger.info(`📊 Environment: ${process.env.NODE_ENV}`);
-  logger.info(`🔗 Health check: http://localhost:${PORT}/api/health`);
-});
+// Start server with dynamic port detection
+const startServer = async () => {
+  try {
+    const preferredPort = parseInt(process.env.PORT || '3001');
+    const PORT = await findAvailablePort(preferredPort);
+    
+    const server = app.listen(PORT, () => {
+      logger.info(`🚀 RecipeHub API server running on port ${PORT}`);
+      logger.info(`📊 Environment: ${process.env.NODE_ENV}`);
+      logger.info(`🔗 Health check: http://localhost:${PORT}/api/health`);
+      logger.info(`🌐 API Base URL: http://localhost:${PORT}/api`);
+      
+      // Write port to a file so frontend can read it
+      const fs = require('fs');
+      const path = require('path');
+      const portFile = path.join(__dirname, '../../.port');
+      fs.writeFileSync(portFile, PORT.toString());
+      logger.info(`📝 Port written to ${portFile}`);
+    });
 
-process.on('SIGTERM', () => {
-  logger.info('SIGTERM received, shutting down gracefully');
-  server.close(() => {
-    logger.info('Process terminated');
-    process.exit(0);
-  });
-});
+    process.on('SIGTERM', () => {
+      logger.info('SIGTERM received, shutting down gracefully');
+      server.close(() => {
+        logger.info('Process terminated');
+        process.exit(0);
+      });
+    });
 
-process.on('SIGINT', () => {
-  logger.info('SIGINT received, shutting down gracefully');
-  server.close(() => {
-    logger.info('Process terminated');
-    process.exit(0);
-  });
-});
+    process.on('SIGINT', () => {
+      logger.info('SIGINT received, shutting down gracefully');
+      server.close(() => {
+        logger.info('Process terminated');
+        process.exit(0);
+      });
+    });
+    
+  } catch (error) {
+    logger.error('Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+startServer();
 
 export default app;

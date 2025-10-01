@@ -14,6 +14,7 @@ const HomePage = lazy(() => import('./pages/HomePage').then(module => ({ default
 const RecipesPage = lazy(() => import('./pages/RecipesPage').then(module => ({ default: module.RecipesPage })));
 const RecipeDetailPage = lazy(() => import('./pages/RecipeDetailPage').then(module => ({ default: module.RecipeDetailPage })));
 const CreateRecipePage = lazy(() => import('./pages/CreateRecipePage').then(module => ({ default: module.CreateRecipePage })));
+const EditRecipePage = lazy(() => import('./pages/EditRecipePage').then(module => ({ default: module.EditRecipePage })));
 const LoginPage = lazy(() => import('./pages/LoginPage').then(module => ({ default: module.LoginPage })));
 const RegisterPage = lazy(() => import('./pages/RegisterPage').then(module => ({ default: module.RegisterPage })));
 const ProfilePage = lazy(() => import('./pages/ProfilePage').then(module => ({ default: module.ProfilePage })));
@@ -54,6 +55,8 @@ function App() {
                         <Route path="/recipes" element={<RecipesPage />} />
                         <Route path="/recipes/:id" element={<RecipeDetailPage />} />
                         <Route path="/recipes/create" element={<CreateRecipePage />} />
+                        <Route path="/create-recipe" element={<CreateRecipePage />} />
+                        <Route path="/recipe/:id/edit" element={<ProtectedRoute><EditRecipePage /></ProtectedRoute>} />
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/register" element={<RegisterPage />} />
                         <Route path="/profile" element={<ProtectedRoute><ProfileLayout /></ProtectedRoute>}>

@@ -37,7 +37,7 @@ const initialFormData: RecipeFormData = {
   prepTime: 30,
   cookTime: 30,
   servings: 4,
-  difficulty: 'easy' as DifficultyType,
+  difficulty: 'EASY' as DifficultyType,
   estimatedCalories: 300,
   complexity: 'EASY' as ComplexityType,
   flavorType: 'SAVORY' as FlavorTypeEnum,
@@ -57,31 +57,50 @@ export function useRecipeForm() {
     const newErrors: FormErrors = {};
 
     if (!formData.title.trim()) {
-      newErrors.title = 'Title is required';
+      newErrors.title = 'El título es requerido';
     }
 
     if (!formData.instructions.trim()) {
-      newErrors.instructions = 'Instructions are required';
+      newErrors.instructions = 'Las instrucciones son requeridas';
+    } else if (formData.instructions.trim().length < 10) {
+      newErrors.instructions = 'Las instrucciones deben tener al menos 10 caracteres';
+    }
+
+    // Validate description if provided
+    if (formData.description && formData.description.trim() && formData.description.trim().length < 10) {
+      newErrors.description = 'La descripción debe tener al menos 10 caracteres';
+    }
+
+    // Validate imageUrl if provided
+    if (formData.imageUrl && formData.imageUrl.trim()) {
+      const imageUrlPattern = /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i;
+      const basicUrlPattern = /^https?:\/\/.+/;
+      
+      if (!basicUrlPattern.test(formData.imageUrl.trim())) {
+        newErrors.imageUrl = 'Ingresa una URL válida que comience con http:// o https://';
+      } else if (!imageUrlPattern.test(formData.imageUrl.trim())) {
+        newErrors.imageUrl = 'La URL debe apuntar a una imagen válida (.jpg, .jpeg, .png, .gif, .webp, .svg)';
+      }
     }
 
     if (formData.prepTime <= 0) {
-      newErrors.prepTime = 'Prep time must be greater than 0';
+      newErrors.prepTime = 'El tiempo de preparación debe ser mayor a 0';
     }
 
     if (formData.cookTime <= 0) {
-      newErrors.cookTime = 'Cook time must be greater than 0';
+      newErrors.cookTime = 'El tiempo de cocción debe ser mayor a 0';
     }
 
     if (formData.servings <= 0) {
-      newErrors.servings = 'Servings must be greater than 0';
+      newErrors.servings = 'Las porciones deben ser mayor a 0';
     }
 
     if (formData.categoryIds.length === 0) {
-      newErrors.categoryIds = 'Select at least one category';
+      newErrors.categoryIds = 'Selecciona al menos una categoría';
     }
 
     if (formData.ingredients.length === 0) {
-      newErrors.ingredients = 'Add at least one ingredient';
+      newErrors.ingredients = 'Agrega al menos un ingrediente';
     }
 
     setErrors(newErrors);
@@ -148,7 +167,9 @@ export function useRecipeForm() {
     return {
       ...formData,
       description: formData.description || undefined,
-      estimatedCalories: formData.estimatedCalories || undefined
+      estimatedCalories: formData.estimatedCalories || undefined,
+      imageUrl: formData.imageUrl || undefined,
+      isPublished: true // Publicar recetas automáticamente
     };
   }, [formData]);
 

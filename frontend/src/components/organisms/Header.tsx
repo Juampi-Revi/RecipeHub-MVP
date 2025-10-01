@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ChefHat, User, LogOut, Plus } from 'lucide-react';
+import { ChefHat, User, LogOut } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../atoms/LanguageSelector';
 import ThemeToggle from '../atoms/ThemeToggle';
@@ -52,8 +52,8 @@ export function Header() {
             
             {isAuthenticated ? (
               <>
-                {/* Add Recipe button - For all authenticated users
-                <Link
+                {/* Add Recipe button - For all authenticated users */}
+                {/* <Link
                   to="/recipes/create"
                   className="hidden sm:flex items-center space-x-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors"
                 >

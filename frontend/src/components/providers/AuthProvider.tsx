@@ -16,7 +16,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Initialize auth state on app load
   useEffect(() => {
     const initializeAuth = async () => {
       if (authService.isAuthenticated()) {
@@ -86,7 +85,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setError(null);
     } catch (error) {
       console.warn('Logout error:', error);
-      // Even if logout fails, clear local state
       setUser(null);
       setError(null);
     } finally {
@@ -106,20 +104,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const updateProfile = async (userData: Partial<User>): Promise<void> => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      
-      const updatedUser = await authService.updateProfile(userData);
-      setUser(updatedUser);
-    } catch (error) {
-      handleError(error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
 
   const changePassword = async (currentPassword: string, newPassword: string): Promise<void> => {
     try {
@@ -145,7 +130,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     logout,
     clearError,
     refreshUser,
-    updateProfile,
     changePassword,
   };
 

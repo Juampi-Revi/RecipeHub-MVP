@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { memo } from 'react';
+import { Heart } from 'lucide-react';
+import { useAuth } from '../../hooks/useAuth';
+import { useToggleLike } from '../../hooks/useRecipes';
 import type { Recipe } from '../../types';
 
 interface RecipeCardProps {
@@ -11,6 +14,8 @@ interface RecipeCardProps {
 
 export const RecipeCard = memo(function RecipeCard({ recipe, onClick, className = '' }: RecipeCardProps) {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const toggleLikeMutation = useToggleLike();
 
   const difficultyColors = {
     easy: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300',
@@ -27,13 +32,27 @@ export const RecipeCard = memo(function RecipeCard({ recipe, onClick, className 
     return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
   };
 
+  const handleToggleLike = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!user) {
+      return;
+    }
+
+    toggleLikeMutation.mutate(recipe.id);
+  };
+
+  // Only show favorite button if user is logged in and it's not their own recipe
+  const showFavoriteButton = user && user.id !== recipe.authorId;
+
   const cardContent = (
     <div 
       className={`bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow cursor-pointer ${className}`}
       onClick={onClick}
     >
       {/* Recipe Image */}
-      <div className="aspect-w-16 aspect-h-9 bg-gray-200 dark:bg-gray-700">
+      <div className="aspect-w-16 aspect-h-9 bg-gray-200 dark:bg-gray-700 relative">
         {recipe.imageUrl ? (
           <img
             src={recipe.imageUrl}
@@ -50,6 +69,24 @@ export const RecipeCard = memo(function RecipeCard({ recipe, onClick, className 
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
+        )}
+        
+        {/* Favorite Button */}
+        {showFavoriteButton && (
+          <button
+            onClick={handleToggleLike}
+            disabled={toggleLikeMutation.isPending}
+            className="absolute top-2 right-2 p-2 rounded-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
+            title={recipe.isLikedByUser ? t('recipes.removeFavorite') : t('recipes.addFavorite')}
+          >
+            <Heart 
+              className={`w-5 h-5 ${
+                recipe.isLikedByUser 
+                  ? 'text-red-500 fill-red-500' 
+                  : 'text-gray-600 dark:text-gray-300'
+              }`}
+            />
+          </button>
         )}
       </div>
 
@@ -68,7 +105,7 @@ export const RecipeCard = memo(function RecipeCard({ recipe, onClick, className 
         {/* Recipe Meta */}
         <div className="flex items-center justify-between mb-3">
           {/* Difficulty Badge */}
-          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${difficultyColors[recipe.difficulty]}`}>
+          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${difficultyColors[recipe.difficulty.toLowerCase() as keyof typeof difficultyColors]}`}>
             {t(`recipes.difficulty.${recipe.difficulty}`)}
           </span>
 

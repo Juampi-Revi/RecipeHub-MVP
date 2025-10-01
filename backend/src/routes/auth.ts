@@ -6,6 +6,7 @@ import {
   logout,
   logoutAll,
   getProfile,
+  getStatistics,
 } from '../controllers/authController';
 import { authenticate } from '../middleware/auth';
 
@@ -48,9 +49,16 @@ router.post('/logout-all', logoutAll);
 
 /**
  * @route   GET /api/auth/profile
- * @desc    Get current user profile
+ * @desc    Get user profile
  * @access  Private
  */
 router.get('/profile', authenticate, getProfile);
+
+/**
+ * @route   GET /api/auth/statistics
+ * @desc    Get user statistics (recipes, favorites, comments)
+ * @access  Private
+ */
+router.get('/statistics', authenticate, getStatistics);
 
 export default router;

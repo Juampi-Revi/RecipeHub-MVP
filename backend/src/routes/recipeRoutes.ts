@@ -9,6 +9,7 @@ import {
   getRecipesByAuthor,
   toggleLike,
   getMyRecipes,
+  getFavoriteRecipes,
   publishRecipe,
   unpublishRecipe
 } from '../controllers/recipeController';
@@ -21,6 +22,8 @@ router.get('/', optionalAuth, getRecipes);
 router.get('/search', optionalAuth, searchRecipes);
 
 router.get('/my', authenticate, getMyRecipes);
+
+router.get('/favorites', authenticate, getFavoriteRecipes);
 
 router.get('/author/:authorId', optionalAuth, getRecipesByAuthor);
 

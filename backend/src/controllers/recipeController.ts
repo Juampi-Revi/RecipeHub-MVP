@@ -84,7 +84,10 @@ export const getRecipes = asyncHandler(async (req: Request, res: Response) => {
 
     const validatedFilters = recipeFiltersSchema.parse(filters);
     
-    const result = await recipeService.getRecipes(validatedFilters, pagination, sort);
+    // Get userId from request if user is authenticated
+    const userId = (req as AuthenticatedRequest).user?.id;
+    
+    const result = await recipeService.getRecipes(validatedFilters, pagination, sort, userId);
     
     sendSuccessResponse(res, result, 'Recipes retrieved successfully');
   } catch (error) {
@@ -101,7 +104,10 @@ export const getRecipeById = asyncHandler(async (req: Request, res: Response) =>
   try {
     const { recipeId } = recipeIdSchema.parse(req.params);
     
-    const recipe = await recipeService.getRecipeById(recipeId);
+    // Get userId from request if user is authenticated
+    const userId = (req as AuthenticatedRequest).user?.id;
+    
+    const recipe = await recipeService.getRecipeById(recipeId, userId);
     
     if (!recipe) {
       throw new NotFoundError('Recipe not found');
@@ -185,7 +191,10 @@ export const searchRecipes = asyncHandler(async (req: Request, res: Response) =>
 
     const validatedFilters = recipeFiltersSchema.parse(filters);
     
-    const result = await recipeService.searchRecipes(searchParams.q, validatedFilters, pagination, sort);
+    // Get userId from request if user is authenticated
+    const userId = (req as AuthenticatedRequest).user?.id;
+    
+    const result = await recipeService.searchRecipes(searchParams.q, validatedFilters, pagination, sort, userId);
     
     sendSuccessResponse(res, result, 'Search completed successfully');
   } catch (error) {
@@ -204,7 +213,10 @@ export const getRecipesByAuthor = asyncHandler(async (req: Request, res: Respons
     const pagination = paginationSchema.parse(req.query);
     const sort = recipeSortSchema.parse(req.query);
     
-    const result = await recipeService.getRecipesByAuthor(authorId, pagination, sort);
+    // Get userId from request if user is authenticated
+    const userId = (req as AuthenticatedRequest).user?.id;
+    
+    const result = await recipeService.getRecipesByAuthor(authorId, pagination, sort, userId);
     
     sendSuccessResponse(res, result, 'Author recipes retrieved successfully');
   } catch (error) {
@@ -297,6 +309,30 @@ export const unpublishRecipe = asyncHandler(async (req: AuthenticatedRequest, re
     const recipe = await recipeService.updateRecipe(recipeId, { isPublished: false }, userId);
     
     sendSuccessResponse(res, recipe, 'Recipe unpublished successfully');
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const validationError = handleZodError(error);
+      sendErrorResponse(res, validationError);
+    } else {
+      sendErrorResponse(res, error as Error);
+    }
+  }
+});
+
+export const getFavoriteRecipes = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      throw new AuthorizationError('User not authenticated');
+    }
+
+    const pagination = paginationSchema.parse(req.query);
+    const sort = recipeSortSchema.parse(req.query);
+    
+    const result = await recipeService.getFavoriteRecipes(userId, pagination, sort);
+    
+    sendSuccessResponse(res, result, 'Favorite recipes retrieved successfully');
   } catch (error) {
     if (error instanceof z.ZodError) {
       const validationError = handleZodError(error);

@@ -1,19 +1,31 @@
-import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Clock, Users, ChefHat, Star } from 'lucide-react';
-import { useRecipe } from '../hooks/useRecipes';
+import { ArrowLeft, Clock, Users, ChefHat, Star, Heart } from 'lucide-react';
+import { useRecipe, useToggleLike } from '../hooks/useRecipes';
+import { useAuth } from '../hooks/useAuth';
 import { LoadingSpinner } from '../components/atoms/LoadingSpinner';
 import { ErrorMessage } from '../components/molecules/ErrorMessage';
 import { IngredientList } from '../components/molecules/IngredientList';
 import RecipeSteps from '../components/molecules/RecipeSteps';
+import { CommentList } from '../components/molecules/CommentList';
+import { useParams, useNavigate } from 'react-router-dom';
 
 export function RecipeDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { user } = useAuth();
   
   const { data: recipe, isLoading, error } = useRecipe(id!);
+  const toggleLikeMutation = useToggleLike();
+
+  const handleToggleLike = async () => {
+    if (!user || !recipe) return;
+    try {
+      await toggleLikeMutation.mutateAsync(recipe.id);
+    } catch (error) {
+      console.error('Error toggling like:', error);
+    }
+  };
 
   const difficultyColors = {
     easy: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300',
@@ -115,9 +127,27 @@ export function RecipeDetailPage() {
         <div className="p-6 md:p-8">
           {/* Recipe Header */}
           <div className="mb-6">
-            <h1 className="text-3xl md:text-4xl font-display font-bold text-gray-900 dark:text-white mb-4">
-              {recipe.title}
-            </h1>
+            <div className="flex items-start justify-between mb-4">
+              <h1 className="text-3xl md:text-4xl font-display font-bold text-gray-900 dark:text-white">
+                {recipe.title}
+              </h1>
+              {user && (
+                <button
+                  onClick={handleToggleLike}
+                  disabled={toggleLikeMutation.isPending}
+                  className={`ml-4 p-3 rounded-full transition-all duration-200 ${
+                    recipe.isLikedByUser
+                      ? 'text-red-600 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/30'
+                      : 'text-gray-400 bg-gray-50 hover:bg-gray-100 hover:text-red-500 dark:bg-gray-700 dark:hover:bg-gray-600'
+                  } ${toggleLikeMutation.isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  title={recipe.isLikedByUser ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+                >
+                  <Heart 
+                    className={`h-6 w-6 ${recipe.isLikedByUser ? 'fill-current' : ''}`} 
+                  />
+                </button>
+              )}
+            </div>
             
             <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
               {recipe.description}
@@ -250,6 +280,14 @@ export function RecipeDetailPage() {
               </div>
             </div>
           )}
+
+          {/* Comments Section */}
+          <div className="border-t border-gray-200 dark:border-gray-600 pt-8 mt-8">
+            <CommentList 
+              recipeId={recipe.id}
+              recipeOwnerId={recipe.authorId}
+            />
+          </div>
         </div>
       </div>
     </div>

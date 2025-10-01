@@ -18,13 +18,43 @@ interface RetryableAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
 }
 
+// Function to detect backend port dynamically
+const detectBackendPort = async (): Promise<string> => {
+  // First try environment variable
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+
+  // Try common ports for backend
+  const commonPorts = [3001, 3002, 3003, 3004, 3005, 8000, 8001, 8080];
+  
+  for (const port of commonPorts) {
+    try {
+      const testUrl = `http://localhost:${port}/api/health`;
+      const response = await axios.get(testUrl, { timeout: 2000 });
+      if (response.status === 200) {
+        return `http://localhost:${port}/api`;
+      }
+    } catch {
+      // Port not available, continue to next
+      continue;
+    }
+  }
+  
+  // Fallback to default
+  console.warn('⚠️ Backend port not detected, using default 3001');
+  return 'http://localhost:3001/api';
+};
+
 class ApiClient {
   private client: AxiosInstance;
   private accessToken: string | null = null;
+  private baseURL: string = '';
 
   constructor() {
+    // Initialize with temporary URL, will be updated after detection
     this.client = axios.create({
-      baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
+      baseURL: 'http://localhost:3001/api',
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
@@ -33,6 +63,16 @@ class ApiClient {
 
     this.setupInterceptors();
     this.loadTokenFromStorage();
+    this.initializeBaseURL();
+  }
+
+  private async initializeBaseURL(): Promise<void> {
+    try {
+      this.baseURL = await detectBackendPort();
+      this.client.defaults.baseURL = this.baseURL;
+    } catch {
+      // Silently fall back to default URL
+    }
   }
 
   private setupInterceptors(): void {
@@ -49,7 +89,9 @@ class ApiClient {
 
     // Response interceptor to handle errors and token refresh
     this.client.interceptors.response.use(
-      (response: AxiosResponse) => response,
+      (response: AxiosResponse) => {
+        return response;
+      },
       async (error: AxiosError) => {
         const originalRequest = error.config as RetryableAxiosRequestConfig;
 
@@ -63,6 +105,7 @@ class ApiClient {
               return this.client(originalRequest);
             }
           } catch (refreshError) {
+            // Clear auth locally and redirect
             this.clearAuth();
             window.location.href = '/login';
             return Promise.reject(refreshError);
@@ -118,9 +161,13 @@ class ApiClient {
     const response = await this.client.post('/auth/refresh', {
       refreshToken,
     });
-
-    const { accessToken } = response.data;
-    this.saveTokenToStorage(accessToken);
+    
+    // Extract tokens from the nested response structure
+    const { accessToken, refreshToken: newRefreshToken } = response.data.data.tokens;
+    
+    // Save new tokens
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', newRefreshToken);
   }
 
   public setAuthTokens(accessToken: string, refreshToken: string): void {

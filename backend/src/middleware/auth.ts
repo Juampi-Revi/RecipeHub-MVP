@@ -7,8 +7,10 @@ import {
   AuthorizationError,
   sendErrorResponse 
 } from '../utils';
+import { createLogger } from '../config/logger';
 
 const prisma = new PrismaClient();
+const logger = createLogger();
 
 export interface AuthenticatedRequest extends Request {
   user?: {
@@ -25,13 +27,21 @@ export const authenticate = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    logger.info(`🔐 Auth middleware - ${req.method} ${req.path}`, {
+      hasAuthHeader: !!req.headers.authorization,
+      userAgent: req.get('User-Agent'),
+    });
+
     const token = extractTokenFromHeader(req.headers.authorization);
     
     if (!token) {
+      logger.warn('🚫 No token provided');
       throw new AuthenticationError('Access token is required');
     }
 
+    logger.info('🔍 Verifying token...');
     const decoded = verifyAccessToken(token);
+    logger.info('✅ Token verified successfully', { userId: decoded.userId });
     
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
@@ -44,12 +54,20 @@ export const authenticate = async (
     });
 
     if (!user) {
+      logger.warn('🚫 User not found in database', { userId: decoded.userId });
       throw new AuthenticationError('User not found');
     }
 
+    logger.info('✅ User found and authenticated', { userId: user.id, email: user.email });
     req.user = user;
     next();
   } catch (error) {
+    logger.error('❌ Authentication failed', { 
+      error: error instanceof Error ? error.message : 'Unknown error',
+      path: req.path,
+      method: req.method 
+    });
+    
     if (error instanceof AuthenticationError) {
       sendErrorResponse(res, error);
     } else {

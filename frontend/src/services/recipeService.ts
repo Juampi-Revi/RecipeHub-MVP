@@ -74,6 +74,11 @@ export class RecipeService {
     return apiClient.get<RecipeListResponse>('/recipes/my', queryParams);
   }
 
+  async getFavoriteRecipes(params?: RecipeSearchParams): Promise<RecipeListResponse> {
+    const queryParams = params ? this.buildQueryParams(params) : undefined;
+    return apiClient.get<RecipeListResponse>('/recipes/favorites', queryParams);
+  }
+
   async getRecipesByAuthor(authorId: string, params?: RecipeSearchParams): Promise<RecipeListResponse> {
     const queryParams = params ? this.buildQueryParams(params) : undefined;
     return apiClient.get<RecipeListResponse>(`/recipes/author/${authorId}`, queryParams);

@@ -149,9 +149,10 @@ export function CreateRecipePage() {
             name="description"
             value={formData.description}
             onChange={handleInputChange}
-            label="Description"
-            placeholder="Brief description of the recipe"
+            label="Description (optional)"
+            placeholder="Brief description of the recipe (minimum 10 characters if provided)"
             rows={3}
+            error={errors.description}
           />
 
           <ImageUrlField
@@ -166,7 +167,7 @@ export function CreateRecipePage() {
             value={formData.instructions}
             onChange={handleInputChange}
             label="Instructions"
-            placeholder="Detailed steps to prepare the recipe"
+            placeholder="Detailed steps to prepare the recipe (minimum 10 characters required)"
             rows={6}
             required
             error={errors.instructions}

@@ -116,7 +116,14 @@ export function useCreateRecipe() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateRecipeRequest) => recipeService.createRecipe(data),
+    mutationFn: (data: CreateRecipeRequest) => {
+      // Establecer isPublished: true por defecto para que las recetas aparezcan inmediatamente
+      const recipeData = {
+        ...data,
+        isPublished: data.isPublished !== undefined ? data.isPublished : true
+      };
+      return recipeService.createRecipe(recipeData);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
       queryClient.invalidateQueries({ queryKey: recipeKeys.myRecipes() });

@@ -26,7 +26,8 @@ export function CreateRecipePage() {
     handleInputChange,
     handleCategoryChange,
     handleIngredientChange,
-    getFormDataForSubmission
+    getFormDataForSubmission,
+    resetForm
   } = useRecipeForm();
 
   useEffect(() => {
@@ -43,15 +44,78 @@ export function CreateRecipePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      // Get current errors and show specific messages
+      const currentErrors = Object.entries(errors).filter(([, value]) => value);
+      if (currentErrors.length > 0) {
+        const errorMessages = currentErrors.map(([field, message]) => {
+          const fieldNames: { [key: string]: string } = {
+            title: 'Título',
+            description: 'Descripción',
+            instructions: 'Instrucciones',
+            imageUrl: 'URL de imagen',
+            prepTime: 'Tiempo de preparación',
+            cookTime: 'Tiempo de cocción',
+            servings: 'Porciones',
+            categoryIds: 'Categorías',
+            ingredients: 'Ingredientes'
+          };
+          return `• ${fieldNames[field] || field}: ${message}`;
+        }).join('\n');
+        
+        showError(`Por favor corrige los siguientes errores:\n${errorMessages}`);
+      } else {
+        showError('Por favor corrige los errores en el formulario antes de continuar.');
+      }
+      return;
+    }
 
     try {
       const recipeData = getFormDataForSubmission();
       await createRecipeMutation.mutateAsync(recipeData);
-      showSuccess('Recipe created successfully');
+      resetForm();
+      showSuccess('¡Receta creada exitosamente!');
       navigate('/recipes');
-    } catch {
-      showError('Error creating recipe. Please try again.');
+    } catch (error: unknown) {
+      console.error('Error creating recipe:', error);
+      
+      // Handle specific validation errors from backend
+      if (error && typeof error === 'object' && 'response' in error) {
+        const responseError = error as { response?: { data?: { details?: Array<{ field: string; message: string }> } } };
+        const backendErrors = responseError.response?.data?.details;
+        
+        if (backendErrors) {
+          let errorMessage = 'Errores de validación:\n';
+          
+          backendErrors.forEach((err) => {
+            switch (err.field) {
+              case 'instructions':
+                errorMessage += `• Las instrucciones deben tener al menos 10 caracteres\n`;
+                break;
+              case 'imageUrl':
+                errorMessage += `• La URL de la imagen no es válida\n`;
+                break;
+              case 'title':
+                errorMessage += `• El título es requerido y debe tener entre 3-100 caracteres\n`;
+                break;
+              case 'categoryIds':
+                errorMessage += `• Debes seleccionar al menos una categoría\n`;
+                break;
+              case 'ingredients':
+                errorMessage += `• Debes agregar al menos un ingrediente\n`;
+                break;
+              default:
+                errorMessage += `• ${err.field}: ${err.message}\n`;
+            }
+          });
+          
+          showError(errorMessage);
+        } else {
+          showError('Error de validación. Por favor verifica todos los campos.');
+        }
+      } else {
+        showError('Error al crear la receta. Por favor verifica todos los campos e intenta nuevamente.');
+      }
     }
   };
 
@@ -74,7 +138,7 @@ export function CreateRecipePage() {
             type="text"
             value={formData.title}
             onChange={handleInputChange}
-            label="Recipe Title *"
+            label="Recipe Title"
             placeholder="Recipe name"
             required
             error={errors.title}
@@ -101,7 +165,7 @@ export function CreateRecipePage() {
             name="instructions"
             value={formData.instructions}
             onChange={handleInputChange}
-            label="Instructions *"
+            label="Instructions"
             placeholder="Detailed steps to prepare the recipe"
             rows={6}
             required
@@ -115,7 +179,7 @@ export function CreateRecipePage() {
               type="number"
               value={formData.prepTime}
               onChange={handleInputChange}
-              label="Prep Time (min) *"
+              label="Prep Time (min)"
               min="1"
               required
               error={errors.prepTime}
@@ -127,7 +191,7 @@ export function CreateRecipePage() {
               type="number"
               value={formData.cookTime}
               onChange={handleInputChange}
-              label="Cook Time (min) *"
+              label="Cook Time (min)"
               min="1"
               required
               error={errors.cookTime}
@@ -139,7 +203,7 @@ export function CreateRecipePage() {
               type="number"
               value={formData.servings}
               onChange={handleInputChange}
-              label="Servings *"
+              label="Servings"
               min="1"
               required
               error={errors.servings}
@@ -154,9 +218,9 @@ export function CreateRecipePage() {
               onChange={handleInputChange}
               label="Difficulty"
               options={[
-                { value: 'easy', label: 'Easy' },
-                { value: 'medium', label: 'Medium' },
-                { value: 'hard', label: 'Hard' }
+                { value: 'EASY', label: 'Easy' },
+                { value: 'MEDIUM', label: 'Medium' },
+                { value: 'HARD', label: 'Hard' }
               ]}
             />
 
@@ -231,7 +295,7 @@ export function CreateRecipePage() {
           {/* Categorías */}
           <div>
             <label className="label">
-              Categorías *
+              Categorías
             </label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
               {categories.map((category) => (
@@ -256,7 +320,7 @@ export function CreateRecipePage() {
           {/* Ingredientes */}
           <div>
             <label className="label">
-              Ingredientes *
+              Ingredientes
             </label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
               {ingredients.map((ingredient) => (

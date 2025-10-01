@@ -178,7 +178,9 @@
       "Mediterranean": "Mediterránea",
       "American": "Americana"
     },
-    "additionalInfo": "Información Adicional"
+    "additionalInfo": "Información Adicional",
+    "addFavorite": "Agregar a favoritos",
+    "removeFavorite": "Quitar de favoritos"
   },
   "ingredients": {
     "Chicken Breast": "Pechuga de Pollo",
@@ -250,7 +252,8 @@
       "forgotPassword": "¿Olvidaste tu contraseña?",
       "signInButton": "Iniciar Sesión",
       "noAccount": "¿No tienes una cuenta?",
-      "signUpLink": "Regístrate aquí"
+      "signUpLink": "Regístrate aquí",
+      "success": "¡Sesión iniciada exitosamente! Bienvenido de vuelta."
     },
     "signUp": {
       "title": "Crear Cuenta",
@@ -291,13 +294,27 @@
       "recipesCreated": "Recetas Creadas",
       "favoriteRecipes": "Recetas Favoritas",
       "commentsLeft": "Comentarios Dejados",
-      "editProfile": "Editar Perfil"
+      "editProfile": "Editar Perfil",
+      "editForm": {
+        "title": "Editar Perfil",
+        "namePlaceholder": "Ingresa tu nombre completo",
+        "emailPlaceholder": "Ingresa tu correo electrónico",
+        "bioLabel": "Biografía",
+        "bioPlaceholder": "Cuéntanos un poco sobre ti...",
+        "avatarLabel": "URL del Avatar",
+        "avatarPlaceholder": "https://ejemplo.com/tu-avatar.jpg",
+        "saveChanges": "Guardar Cambios",
+        "cancel": "Cancelar",
+        "updating": "Actualizando...",
+        "updateSuccess": "Perfil actualizado exitosamente",
+        "updateError": "Error al actualizar el perfil"
+      }
     },
     "myRecipes": {
       "title": "Mis Recetas",
       "subtitle": "Gestiona tus recetas creadas.",
       "createNew": "Crear Nueva Receta",
-      "createFirst": "Crea Tu Primera Receta",
+      "createFirst": "Agregar receta",
       "noRecipes": "Aún no hay recetas",
       "noRecipesDescription": "Aún no has creado ninguna receta. ¡Comienza a compartir tus creaciones culinarias!",
       "edit": "Editar Receta",
@@ -382,5 +399,40 @@
   "language": {
     "english": "English",
     "spanish": "Español"
+  },
+  "comments": {
+    "title": "Comentarios",
+    "addComment": "Agregar Comentario",
+    "cancel": "Cancelar",
+    "noComments": "No hay comentarios aún",
+    "loginToComment": "Inicia sesión para comentar",
+    "loginPrompt": "¿Quieres dejar un comentario?",
+    "commentPlaceholder": "Escribe tu comentario aquí...",
+    "replyPlaceholder": "Escribe tu respuesta...",
+    "rating": "Calificación",
+    "clearRating": "Limpiar",
+    "submitComment": "Publicar Comentario",
+    "submitReply": "Publicar Respuesta",
+    "updateComment": "Actualizar Comentario",
+    "submitting": "Enviando...",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "report": "Reportar",
+    "reply": "Responder",
+    "confirmDelete": "¿Estás seguro de que quieres eliminar este comentario?",
+    "anonymousUser": "Usuario Anónimo",
+    "edited": "editado",
+    "hiddenNotice": "Este comentario ha sido reportado y está oculto para otros usuarios.",
+    "reportReason": "Razón del reporte",
+    "selectReason": "Selecciona una razón",
+    "submitReport": "Enviar Reporte",
+    "loadError": "Error al cargar comentarios",
+    "reasons": {
+      "spam": "Spam",
+      "inappropriate": "Contenido inapropiado",
+      "harassment": "Acoso",
+      "misinformation": "Información falsa",
+      "other": "Otro"
+    }
   }
 }

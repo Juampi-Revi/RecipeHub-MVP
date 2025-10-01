@@ -121,6 +121,7 @@ export const sendErrorResponse = (
     logger.warn('Client error:', {
       error: error.message,
       statusCode: code,
+      details: (error as any).errors || undefined,
     });
   }
 

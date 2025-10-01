@@ -62,6 +62,7 @@ export interface RecipeWithDetails extends Recipe {
     ratings: number;
   };
   avgRating?: number;
+  isLikedByUser?: boolean;
 }
 
 export interface RecipeListResponse {
@@ -311,7 +312,8 @@ class RecipeService {
   async getRecipes(
     filters: RecipeFiltersInput = {},
     pagination: PaginationInput = {},
-    sort: RecipeSortInput = { sortBy: 'createdAt', sortOrder: 'desc' }
+    sort: RecipeSortInput = { sortBy: 'createdAt', sortOrder: 'desc' },
+    userId?: string
   ): Promise<RecipeListResponse> {
     const page = pagination.page || 1;
     const limit = pagination.limit || 10;
@@ -331,17 +333,20 @@ class RecipeService {
       prisma.recipe.count({ where }),
     ]);
 
-    const recipesWithRating = await Promise.all(
-      recipes.map(recipe => this.addAverageRating(recipe))
+    const recipesWithRatingAndLikes = await Promise.all(
+      recipes.map(async recipe => {
+        const recipeWithRating = await this.addAverageRating(recipe);
+        return this.addUserLikeStatus(recipeWithRating, userId);
+      })
     );
 
     return {
-      recipes: recipesWithRating,
+      recipes: recipesWithRatingAndLikes,
       pagination: createPaginationMeta(page, limit, total),
     };
   }
 
-  async getRecipeById(id: string): Promise<RecipeWithDetails | null> {
+  async getRecipeById(id: string, userId?: string): Promise<RecipeWithDetails | null> {
     const recipe = await prisma.recipe.findUnique({
       where: { id },
       include: this.getRecipeInclude(),
@@ -349,7 +354,8 @@ class RecipeService {
 
     if (!recipe) return null;
 
-    return this.addAverageRating(recipe);
+    const recipeWithRating = await this.addAverageRating(recipe);
+    return this.addUserLikeStatus(recipeWithRating, userId);
   }
 
   async updateRecipe(
@@ -427,19 +433,21 @@ class RecipeService {
     query: string,
     filters: RecipeFiltersInput = {},
     pagination: PaginationInput = {},
-    sort: RecipeSortInput = { sortBy: 'createdAt', sortOrder: 'desc' }
+    sort: RecipeSortInput = { sortBy: 'createdAt', sortOrder: 'desc' },
+    userId?: string
   ): Promise<RecipeListResponse> {
     const searchFilters = { ...filters, search: query };
-    return this.getRecipes(searchFilters, pagination, sort);
+    return this.getRecipes(searchFilters, pagination, sort, userId);
   }
 
   async getRecipesByAuthor(
     authorId: string,
     pagination: PaginationInput = {},
-    sort: RecipeSortInput = { sortBy: 'createdAt', sortOrder: 'desc' }
+    sort: RecipeSortInput = { sortBy: 'createdAt', sortOrder: 'desc' },
+    userId?: string
   ): Promise<RecipeListResponse> {
     const filters = { authorId };
-    return this.getRecipes(filters, pagination, sort);
+    return this.getRecipes(filters, pagination, sort, userId);
   }
 
   async toggleLike(recipeId: string, userId: string): Promise<{ liked: boolean; likesCount: number }> {
@@ -480,6 +488,64 @@ class RecipeService {
     };
   }
 
+  async getFavoriteRecipes(
+    userId: string,
+    pagination: PaginationInput = {},
+    sort: RecipeSortInput = { sortBy: 'createdAt', sortOrder: 'desc' }
+  ): Promise<RecipeListResponse> {
+    const page = pagination.page || 1;
+    const limit = pagination.limit || 10;
+    const skip = (page - 1) * limit;
+
+    const orderBy = this.buildOrderBy(sort);
+
+    // Get favorite recipe IDs for the user
+    const favoriteRecipeIds = await prisma.recipeLike.findMany({
+      where: { userId },
+      select: { recipeId: true },
+    });
+
+    const recipeIds = favoriteRecipeIds.map(like => like.recipeId);
+
+    if (recipeIds.length === 0) {
+      return {
+        recipes: [],
+        pagination: createPaginationMeta(page, limit, 0),
+      };
+    }
+
+    const [recipes, total] = await Promise.all([
+      prisma.recipe.findMany({
+        where: {
+          id: { in: recipeIds },
+          isPublished: true, // Only show published recipes
+        },
+        include: this.getRecipeInclude(),
+        orderBy,
+        skip,
+        take: limit,
+      }),
+      prisma.recipe.count({
+        where: {
+          id: { in: recipeIds },
+          isPublished: true,
+        },
+      }),
+    ]);
+
+    const recipesWithRatingAndLikes = await Promise.all(
+      recipes.map(async recipe => {
+        const recipeWithRating = await this.addAverageRating(recipe);
+        return this.addUserLikeStatus(recipeWithRating, userId);
+      })
+    );
+
+    return {
+      recipes: recipesWithRatingAndLikes,
+      pagination: createPaginationMeta(page, limit, total),
+    };
+  }
+
   private async addAverageRating(recipe: any): Promise<RecipeWithDetails> {
     const ratings = await prisma.rating.findMany({
       where: { recipeId: recipe.id },
@@ -493,6 +559,29 @@ class RecipeService {
     return {
       ...recipe,
       avgRating: avgRating ? Math.round(avgRating * 10) / 10 : undefined,
+    };
+  }
+
+  private async addUserLikeStatus(recipe: any, userId?: string): Promise<RecipeWithDetails> {
+    if (!userId) {
+      return {
+        ...recipe,
+        isLikedByUser: false,
+      };
+    }
+
+    const like = await prisma.recipeLike.findUnique({
+      where: {
+        userId_recipeId: {
+          userId,
+          recipeId: recipe.id,
+        },
+      },
+    });
+
+    return {
+      ...recipe,
+      isLikedByUser: !!like,
     };
   }
 }

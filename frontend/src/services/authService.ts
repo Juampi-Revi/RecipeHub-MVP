@@ -61,7 +61,10 @@ export class AuthService {
 
   async logout(): Promise<void> {
     try {
-      await apiClient.post('/auth/logout');
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (refreshToken) {
+        await apiClient.post('/auth/logout', { refreshToken });
+      }
     } catch (error) {
       console.warn('Logout request failed, but clearing local tokens:', error);
     } finally {
@@ -70,12 +73,16 @@ export class AuthService {
   }
 
   async getCurrentUser(): Promise<User> {
-    return apiClient.get<User>('/auth/me');
+    const response = await apiClient.get<{ user: User }>('/auth/profile');
+    return response.user;
   }
 
-  async updateProfile(userData: Partial<User>): Promise<User> {
-    return apiClient.put<User>('/auth/profile', userData);
+  async getStatistics(): Promise<{ totalRecipes: number; totalComments: number; totalLikes: number; totalFollowers: number; totalFollowing: number }> {
+    const response = await apiClient.get<{ statistics: { totalRecipes: number; totalComments: number; totalLikes: number; totalFollowers: number; totalFollowing: number } }>('/auth/statistics');
+    return response.statistics;
   }
+
+
 
   async changePassword(currentPassword: string, newPassword: string): Promise<void> {
     await apiClient.post('/auth/change-password', {

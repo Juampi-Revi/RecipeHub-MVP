@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import type { Recipe } from '../../types';
 import { CarouselHeader } from '../atoms/CarouselHeader';
 import { CarouselNavigation } from '../atoms/CarouselNavigation';

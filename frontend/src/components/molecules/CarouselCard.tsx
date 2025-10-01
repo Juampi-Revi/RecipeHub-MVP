@@ -37,14 +37,14 @@ export function CarouselCard({ recipe, index }: CarouselCardProps) {
             {/* Difficulty badge */}
             <div className="absolute top-3 left-3">
               <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                recipe.difficulty === 'easy' 
-                  ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
-                  : recipe.difficulty === 'medium'
-                  ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'
-                  : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+                recipe.difficulty === 'EASY' 
+                  ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+                  : recipe.difficulty === 'MEDIUM'
+                  ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400'
+                  : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
               }`}>
-                {recipe.difficulty === 'easy' ? 'Easy' : 
-                 recipe.difficulty === 'medium' ? 'Medium' : 'Hard'}
+                {recipe.difficulty === 'EASY' ? 'Easy' : 
+                 recipe.difficulty === 'MEDIUM' ? 'Medium' : 'Hard'}
               </span>
             </div>
 

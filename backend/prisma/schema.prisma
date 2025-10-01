@@ -18,12 +18,25 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  ownedRecipes Recipe[]
-  likedRecipes RecipeLike[]
-  comments     Comment[]
-  ratings      Rating[]
+  ownedRecipes  Recipe[]
+  likedRecipes  RecipeLike[]
+  comments      Comment[]
+  ratings       Rating[]
+  refreshTokens RefreshToken[]
 
   @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
 }
 
 model Category {
@@ -183,14 +196,22 @@ model RecipeLike {
 model Comment {
   id        String   @id @default(cuid())
   content   String
+  rating    Int?     // Rating from 1 to 5 (optional)
+  isReported Boolean @default(false)
+  isHidden   Boolean @default(false)
+  reportReason String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   userId   String
   recipeId String
+  parentId String? // For nested replies
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  parent Comment? @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  
+  replies Comment[] @relation("CommentReplies")
 
   @@map("comments")
 }

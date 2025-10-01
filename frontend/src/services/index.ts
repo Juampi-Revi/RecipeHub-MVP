@@ -4,6 +4,7 @@ export { apiClient, type ApiError, type ApiResponse } from './api';
 // Services
 export { authService, AuthService, type AuthResponse, type RefreshTokenResponse } from './authService';
 export { recipeService, RecipeService, type RecipeSearchParams, type RecipeListResponse } from './recipeService';
+export { commentService, type Comment, type CreateCommentRequest, type UpdateCommentRequest, type ReportCommentRequest, type GetCommentsParams, type CommentsResponse } from './commentService';
 
 // Re-export commonly used types
 export type {

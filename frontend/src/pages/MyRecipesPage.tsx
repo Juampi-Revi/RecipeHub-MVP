@@ -1,96 +1,41 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useToast } from '../hooks/useToast';
 import { useAuth } from '../hooks/useAuth';
-
-interface Recipe {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  cookingTime: number;
-  difficulty: string;
-  createdAt: string;
-}
-
-const mockUserRecipes: Recipe[] = [
-  {
-    id: 1,
-    title: 'Pasta Carbonara',
-    description: 'Deliciosa pasta italiana con huevo y panceta',
-    image: '/src/assets/recipe-placeholder.svg',
-    cookingTime: 30,
-    difficulty: 'medium',
-    createdAt: '2024-01-15'
-  },
-  {
-    id: 2,
-    title: 'Ensalada César',
-    description: 'Ensalada fresca con pollo y aderezo césar',
-    image: '/src/assets/recipe-placeholder.svg',
-    cookingTime: 15,
-    difficulty: 'easy',
-    createdAt: '2024-01-10'
-  }
-];
+import { useMyRecipes, useDeleteRecipe } from '../hooks/useRecipes';
 
 export function MyRecipesPage() {
-  const navigate = useNavigate();
   const { t } = useTranslation();
-  const { success, error: showError } = useToast();
+  const navigate = useNavigate();
   const { user } = useAuth();
-  const queryClient = useQueryClient();
-  const [editingRecipe, setEditingRecipe] = useState<Recipe | null>(null);
 
   const handleCreateRecipe = () => {
     if (user) {
-      navigate('/recipes/create');
+      navigate('/create-recipe');
     } else {
-      showError('Debes iniciar sesión para crear recetas.');
+      navigate('/login');
     }
   };
 
-  const { data: recipes = [], isLoading } = useQuery({
-    queryKey: ['user-recipes', user?.id],
-    queryFn: async () => {
-      return mockUserRecipes;
-    }
-  });
+  useAuth();
+  
+  const { data: recipesResponse, isLoading } = useMyRecipes();
+  const recipes = recipesResponse?.recipes || [];
 
-  const deleteMutation = useMutation({
-    mutationFn: async (recipeId: number) => {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+  // Mutation for deleting recipes
+  const deleteRecipeMutation = useDeleteRecipe();
 
-      if (Math.random() < 0.1) {
-        throw new Error('Failed to delete recipe');
-      }
-      
-      return recipeId;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['user-recipes'] });
-      success(t('profile.myRecipes.deleteSuccess'));
-    },
-    onError: (error) => {
-      console.error('Error deleting recipe:', error);
-      showError(t('profile.myRecipes.deleteError'));
-    }
-  });
-
-  const handleDelete = (recipeId: number, recipeName: string) => {
+  const handleDelete = (recipeId: string, recipeName: string) => {
     const confirmed = window.confirm(t('profile.myRecipes.confirmDelete', { name: recipeName }));
     if (confirmed) {
-      deleteMutation.mutate(recipeId);
+      deleteRecipeMutation.mutate(recipeId);
     }
   };
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'easy': return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
-      case 'hard': return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
+      case 'EASY': return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
+      case 'MEDIUM': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
+      case 'HARD': return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
     }
   };
@@ -146,7 +91,7 @@ export function MyRecipesPage() {
             {t('profile.myRecipes.noRecipesDescription')}
           </p>
           <button
-            onClick={() => setShowCreateForm(true)}
+            onClick={handleCreateRecipe}
             className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
           >
             {t('profile.myRecipes.createFirst')}
@@ -158,7 +103,7 @@ export function MyRecipesPage() {
             <div key={recipe.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow">
               <div className="flex items-start space-x-4">
                 <img
-                  src={recipe.image}
+                  src={recipe.imageUrl || '/src/assets/recipe-placeholder.svg'}
                   alt={recipe.title}
                   className="w-20 h-20 object-cover rounded-lg flex-shrink-0"
                 />
@@ -176,7 +121,7 @@ export function MyRecipesPage() {
                           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          {recipe.cookingTime} min
+                          {recipe.prepTime + recipe.cookTime} min
                         </span>
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(recipe.difficulty)}`}>
                           {t(`recipes.difficulty.${recipe.difficulty}`)}
@@ -186,7 +131,7 @@ export function MyRecipesPage() {
                     </div>
                     <div className="flex items-center space-x-2 ml-4">
                       <button
-                        onClick={() => setEditingRecipe(recipe)}
+                        onClick={() => navigate(`/recipe/${recipe.id}/edit`)}
                         className="p-2 text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                         title={t('profile.myRecipes.edit')}
                       >
@@ -196,7 +141,7 @@ export function MyRecipesPage() {
                       </button>
                       <button
                         onClick={() => handleDelete(recipe.id, recipe.title)}
-                        disabled={deleteMutation.isPending}
+                        disabled={deleteRecipeMutation.isPending}
                         className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors disabled:opacity-50"
                         title={t('profile.myRecipes.delete')}
                       >
@@ -210,25 +155,6 @@ export function MyRecipesPage() {
               </div>
             </div>
           ))}
-        </div>
-      )}
-
-      {editingRecipe && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              {t('profile.myRecipes.edit')} - {editingRecipe.title}
-            </h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
-              {t('profile.myRecipes.editFormComingSoon')}
-            </p>
-            <button
-              onClick={() => setEditingRecipe(null)}
-              className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-            >
-              {t('common.close')}
-            </button>
-          </div>
         </div>
       )}
     </div>

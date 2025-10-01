@@ -25,6 +25,10 @@ export const refreshTokenSchema = z.object({
   refreshToken: z.string().min(1, 'Refresh token is required'),
 });
 
+export const logoutSchema = z.object({
+  refreshToken: z.string().min(1, 'Refresh token is required').optional(),
+});
+
 export const changePasswordSchema = z.object({
   currentPassword: z.string().min(1, 'Current password is required'),
   newPassword: passwordSchema,
@@ -45,7 +49,10 @@ export const updateUserSchema = z.object({
   email: emailSchema.optional(),
   role: roleSchema.optional(),
   bio: z.string().max(500, 'Bio must be less than 500 characters').optional(),
-  avatar: z.string().url('Invalid avatar URL').optional(),
+  avatar: z.union([
+    z.literal(''),
+    z.string().url('Invalid avatar URL')
+  ]).optional(),
 });
 
 export const userIdSchema = z.object({

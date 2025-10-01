@@ -171,7 +171,9 @@
       "Italian": "Italian",
       "Mediterranean": "Mediterranean",
       "American": "American"
-    }
+    },
+    "addFavorite": "Add to favorites",
+    "removeFavorite": "Remove from favorites"
   },
   "auth": {
     "signIn": {
@@ -183,7 +185,8 @@
       "forgotPassword": "Forgot password?",
       "signInButton": "Sign In",
       "noAccount": "Don't have an account?",
-      "signUpLink": "Sign up here"
+      "signUpLink": "Sign up here",
+      "success": "Successfully signed in! Welcome back."
     },
     "signUp": {
       "title": "Create Account",
@@ -315,5 +318,40 @@
   "language": {
     "english": "English",
     "spanish": "Español"
+  },
+  "comments": {
+    "title": "Comments",
+    "addComment": "Add Comment",
+    "cancel": "Cancel",
+    "noComments": "No comments yet",
+    "loginToComment": "Log in to comment",
+    "loginPrompt": "Want to leave a comment?",
+    "commentPlaceholder": "Write your comment here...",
+    "replyPlaceholder": "Write your reply...",
+    "rating": "Rating",
+    "clearRating": "Clear",
+    "submitComment": "Post Comment",
+    "submitReply": "Post Reply",
+    "updateComment": "Update Comment",
+    "submitting": "Submitting...",
+    "edit": "Edit",
+    "delete": "Delete",
+    "report": "Report",
+    "reply": "Reply",
+    "confirmDelete": "Are you sure you want to delete this comment?",
+    "anonymousUser": "Anonymous User",
+    "edited": "edited",
+    "hiddenNotice": "This comment has been reported and is hidden from other users.",
+    "reportReason": "Report reason",
+    "selectReason": "Select a reason",
+    "submitReport": "Submit Report",
+    "loadError": "Error loading comments",
+    "reasons": {
+      "spam": "Spam",
+      "inappropriate": "Inappropriate content",
+      "harassment": "Harassment",
+      "misinformation": "Misinformation",
+      "other": "Other"
+    }
   }
 }

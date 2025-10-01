@@ -3,26 +3,45 @@
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-18+-blue.svg)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5+-blue.svg)](https://www.typescriptlang.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue.svg)](https://www.postgresql.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
 
 RecipeHub is a modern, full-stack recipe management platform that allows users to create, share, and discover delicious recipes. Built with cutting-edge technologies and following best practices for scalability, security, and user experience.
 
+## 🚀 Quick Start (2 Commands Only!)
+
+**Prerequisites:** Only [Docker](https://docs.docker.com/get-docker/) installed
+
+```bash
+# 1. Clone the repository
+gh repo clone Juampi-Revi/RecipeHub-MVP
+cd RecipeHub-MVP
+
+# 2. Start everything
+make
+```
+
+**That's it!** 🎉
+
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:3001
+
+### Other Commands
+```bash
+make stop    # Stop all services
+make clean   # Stop and remove everything
+make logs    # View logs
+```
+
 ## 📋 Table of Contents
 
+- [Quick Start](#-quick-start-2-commands-only)
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
-- [Quick Start with Docker](#-quick-start-with-docker)
-- [Manual Installation](#-manual-installation)
-- [Environment Configuration](#-environment-configuration)
-- [Database Setup](#-database-setup)
-- [Running the Application](#-running-the-application)
+- [Alternative Installation Methods](#-alternative-installation-methods)
 - [API Documentation](#-api-documentation)
 - [Testing](#-testing)
-- [Deployment](#-deployment)
 - [Project Structure](#-project-structure)
 - [Contributing](#-contributing)
-- [License](#-license)
 
 ## ✨ Features
 
@@ -95,128 +114,54 @@ RecipeHub is a modern, full-stack recipe management platform that allows users t
 - **Jest & Testing Library** - Testing
 - **GitHub Actions** - CI/CD (ready)
 
-## 🚀 Quick Start with Docker
+## 🔧 Alternative Installation Methods
 
-The fastest way to get RecipeHub running is using Docker. This method requires only Docker and Docker Compose installed on your system.
+### Option 1: Using Docker Compose Directly
 
-### Prerequisites
-- [Docker](https://docs.docker.com/get-docker/) (20.10+)
-- [Docker Compose](https://docs.docker.com/compose/install/) (2.0+)
+If you prefer not to use the Makefile:
 
-### 1. Clone the Repository
 ```bash
-git clone <repository-url>
-cd challenge_orderTob
-```
+# Clone and setup
+gh repo clone Juampi-Revi/RecipeHub-MVP
+cd RecipeHub-MVP
 
-### 2. Environment Setup
-```bash
 # Copy environment files
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 
-# The default values in .env.example work with Docker setup
-```
-
-### 3. Start the Application
-```bash
-# Make the start script executable
+# Start with Docker Compose
 chmod +x start.sh
-
-# Start in development mode
 ./start.sh dev
-
-# Or start in production mode
-./start.sh prod
 ```
 
-### 4. Access the Application
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:3001
-- **API Documentation**: http://localhost:3001/api/health
+### Option 2: Manual Installation (Advanced Users)
 
-### 5. Stop the Application
-```bash
-# Stop all services
-./start.sh stop
-
-# Stop and clean all data (including database)
-./start.sh clean
-```
-
-## 🔧 Manual Installation
-
-If you prefer to run the application without Docker, follow these steps:
-
-### Prerequisites
+**Prerequisites:**
 - [Node.js](https://nodejs.org/) (18.0+)
-- [npm](https://www.npmjs.com/) (9.0+)
-- [PostgreSQL](https://www.postgresql.org/) (15.0+)
-- [Redis](https://redis.io/) (7.0+) - Optional but recommended
+- [Docker](https://docs.docker.com/get-docker/) for database
 
-### 1. Clone and Setup
 ```bash
-git clone <repository-url>
-cd challenge_orderTob
-```
+# Clone repository
+gh repo clone Juampi-Revi/RecipeHub-MVP
+cd RecipeHub-MVP
 
-### 2. Backend Setup
-```bash
+# Start database only
+docker compose up -d db
+
+# Backend setup
 cd backend
-
-# Install dependencies
 npm install
-
-# Copy environment file
 cp .env.example .env
-
-# Edit .env file with your database credentials
-nano .env
-```
-
-### 3. Database Setup
-```bash
-# Create PostgreSQL database
-createdb recipehub_dev
-
-# Generate Prisma client
 npx prisma generate
-
-# Run database migrations
 npx prisma migrate dev
-
-# Seed the database (optional)
-npx prisma db seed
-```
-
-### 4. Frontend Setup
-```bash
-cd ../frontend
-
-# Install dependencies
-npm install
-
-# Copy environment file
-cp .env.example .env
-
-# Edit .env file if needed
-nano .env
-```
-
-### 5. Start Development Servers
-```bash
-# Terminal 1: Start backend
-cd backend
 npm run dev
 
-# Terminal 2: Start frontend
+# Frontend setup (new terminal)
 cd frontend
+npm install
+cp .env.example .env
 npm run dev
 ```
-
-### 6. Access the Application
-- **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:3001
 
 ## ⚙️ Environment Configuration
 

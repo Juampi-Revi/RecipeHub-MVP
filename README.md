@@ -13,7 +13,9 @@ RecipeHub is a modern, full-stack recipe management platform that allows users t
 
 ```bash
 # 1. Clone the repository
-gh repo clone Juampi-Revi/RecipeHub-MVP
+git clone git@github.com:Juampi-Revi/RecipeHub-MVP.git
+# Or if you don't have SSH configured:
+# git clone https://github.com/Juampi-Revi/RecipeHub-MVP.git
 cd RecipeHub-MVP
 
 # 2. Start everything
@@ -22,8 +24,10 @@ make
 
 **That's it!** 🎉
 
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:3001
+- **Frontend**: http://localhost:5173 (or next available port)
+- **Backend API**: http://localhost:3001 (or next available port)
+
+> 🚀 **Smart Port Detection**: The application automatically detects and uses available ports, so you don't need to worry about port conflicts!
 
 ### Other Commands
 ```bash
@@ -75,6 +79,7 @@ make logs    # View logs
 
 ### 🔧 Technical Features
 - **RESTful API** with comprehensive endpoints
+- **Dynamic Port Detection** - Automatic backend discovery and CORS configuration
 - **Real-time Search** with debouncing
 - **Pagination** for large datasets
 - **Rate Limiting** and security headers
